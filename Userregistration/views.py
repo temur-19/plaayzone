@@ -1,17 +1,25 @@
 from django.contrib import auth
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+
+from headapp.models import Location
 from .forms import RegisterForm
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
+from headapp.models import Location
+from .models import CustomUser
+
 
 
 # Create your views here.
 
 
-def index(request):
-    return render(request,'Userregistration/nimadir.html')
+def home(request):
+    locations = Location.objects.count
+    users = CustomUser.objects.count
+    return render(request,'Userregistration/home.html',{'locations':locations,
+                                                                            'users':users})
 
 def log_in(request):
     if request.method == 'POST':
@@ -21,12 +29,12 @@ def log_in(request):
         if user is not None:
             login(request, user)
             # Redirect to a success page.
-            return redirect('index')
+            return redirect('headapp:map')
             ...
         else:
             # Return an 'invalid login' error message.
             messages.error(request,"login yoki parol xato")
-    return render(request,'Userregistration/login.html')
+    return render(request,'Userregistration/login.html',{'form':RegisterForm})
 
 
 def signup(request):
@@ -34,11 +42,9 @@ def signup(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            return redirect('Userregistration:login')
         else:
             print(form.errors)
     else:
         form = RegisterForm()
     return render(request,'Userregistration/signup.html',{'form':form})
-
-

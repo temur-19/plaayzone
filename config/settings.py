@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +30,7 @@ SECRET_KEY = 'django-insecure-tpm(#1#zo&owom9v_5qd2ia_i+3y8n3cyjz_p7$4^28wgsw)kb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['choking-ploy-boneless.ngrok-free.dev', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -38,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Userregistration',
+    'rest_framework',
     'headapp'
 ]
 
@@ -117,5 +123,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS = [BASE_DIR / 'static']
 AUTH_USER_MODEL = 'Userregistration.CustomUser'
+CSRF_TRUSTED_ORIGINS = [
+    'https://choking-ploy-boneless.ngrok-free.dev',
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
