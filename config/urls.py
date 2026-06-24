@@ -21,6 +21,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('management/', include('for_admin.urls')),
     path('', include('Userregistration.urls')),
     path('head/', include('headapp.urls')),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
