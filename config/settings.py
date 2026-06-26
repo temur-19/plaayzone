@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'foruser',
+    'apps.foruser',
     'rest_framework',
-    'headapp',
-    'for_admin',
+    'apps.headapp',
+    'apps.for_admin',
 ]
 
 MIDDLEWARE = [
@@ -147,6 +147,6 @@ LOGIN_URL = "/management/accounts/login/"
 LOGIN_REDIRECT_URL = "/management/"
 LOGOUT_REDIRECT_URL = "/management/accounts/login/"
 
-SESSION_COOKIE_AGE = 60 # 30 daqiqa
+SESSION_COOKIE_AGE = 30
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True
