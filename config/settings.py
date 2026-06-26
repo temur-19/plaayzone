@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Userregistration',
+    'foruser',
     'rest_framework',
     'headapp',
     'for_admin',
@@ -128,7 +128,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-AUTH_USER_MODEL = 'Userregistration.CustomUser'
+AUTH_USER_MODEL = 'foruser.CustomUser'
 CSRF_TRUSTED_ORIGINS = [
     'https://choking-ploy-boneless.ngrok-free.dev',
 ]

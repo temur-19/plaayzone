@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from .models import Location
 from django.contrib.auth.decorators import login_required
 from .forms import ProfileForm
-from Userregistration.models import Profile
+from foruser.models import Profile
 from rest_framework import generics
 from rest_framework.response import Response
 from .serializers import LocationSerializer
@@ -46,5 +46,5 @@ def profile_view(request):
 
     return redirect('headapp:map')
 def logout_view(request):
-    return redirect('Userregistration:login')
+    return redirect('foruser:login')
 

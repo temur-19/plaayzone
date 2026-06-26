@@ -20,7 +20,7 @@ from .models import CustomUser
 def home(request):
     locations = Location.objects.count
     users = CustomUser.objects.count
-    return render(request,'Userregistration/home.html',{'locations':locations,
+    return render(request,'foruser/home.html',{'locations':locations,
                                                                             'users':users})
 def log_in(request):
     if request.method == 'POST':
@@ -36,7 +36,7 @@ def log_in(request):
         else:
             # Return an 'invalid login' error message.
             messages.error(request,"login yoki parol xato")
-    return render(request,'Userregistration/login.html',{'form':RegisterForm})
+    return render(request,'foruser/login.html',{'form':RegisterForm})
 
 
 def signup(request):
@@ -44,9 +44,9 @@ def signup(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('Userregistration:login')
+            return redirect('foruser:login')
         else:
             print(form.errors)
     else:
         form = RegisterForm()
-    return render(request,'Userregistration/signup.html',{'form':form})
+    return render(request,'foruser/signup.html',{'form':form})
