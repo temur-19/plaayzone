@@ -142,3 +142,11 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+LOGIN_URL = "/management/accounts/login/"
+LOGIN_REDIRECT_URL = "/management/"
+LOGOUT_REDIRECT_URL = "/management/accounts/login/"
+
+SESSION_COOKIE_AGE = 60 # 30 daqiqa
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = True

@@ -1,5 +1,6 @@
 from django.contrib import auth
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -21,7 +22,6 @@ def home(request):
     users = CustomUser.objects.count
     return render(request,'Userregistration/home.html',{'locations':locations,
                                                                             'users':users})
-
 def log_in(request):
     if request.method == 'POST':
         username = request.POST["username"]
@@ -29,6 +29,7 @@ def log_in(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+
             # Redirect to a success page.
             return redirect('headapp:map')
             ...

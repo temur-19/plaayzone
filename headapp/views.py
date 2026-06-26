@@ -27,6 +27,7 @@ def locations_api(request):
     print(serializer.data)
     return Response(serializer.data)
 
+@login_required(login_url='/login/')
 def map_view(request):
     context = {
         'api_key': settings.YANDEX_MAPS_API_KEY
