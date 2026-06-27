@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="uz">
 <head>
@@ -6,53 +7,48 @@
     <title>GeoFinder | Admin Panel</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #fbf8f3; /* Qaymoqrang fon */
-            color: #2d2a26;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/foradmin.css' %}">
 </head>
-<body class="font-sans flex h-screen overflow-hidden"> <aside class="w-64 bg-[#f4ebd9] border-r border-[#e6d5ba] flex flex-col justify-between hidden md:flex h-full">
+<body class="font-sans flex h-screen overflow-hidden">
+
+    <aside class="w-64 bg-[#f4ebd9] border-r border-[#e6d5ba] hidden md:flex flex-col justify-between h-full">
         <div>
             <div class="h-16 flex items-center px-6 border-b border-[#e6d5ba]">
-                <span class="text-xl font-black text-amber-700"><i class="fa-solid fa-gears mr-2"></i>GEO-ADMIN</span>
+                <span class="text-xl font-black text-amber-700">
+                    <i class="fa-solid fa-gears mr-2"></i>GEO-ADMIN
+                </span>
             </div>
-
-            <div class="p-4 space-y-3">
-                <a href="#" class="flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-amber-700 text-white font-medium transition">
+            <div class="p-4">
+                <a href="#" class="flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-amber-700 text-white font-medium">
                     <i class="fa-solid fa-map-location-dot w-5"></i>
                     <span>Lokatsiyalar</span>
                 </a>
             </div>
         </div>
-
         <div class="p-4 border-t border-[#e6d5ba]">
-            <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 font-bold transition cursor-pointer text-left border border-red-200">
+            <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 font-bold border border-red-200 transition cursor-pointer text-left">
                 <i class="fa-solid fa-right-from-bracket w-5"></i>
-                <span>Log out (Chiqish)</span>
+                <span>Chiqish</span>
             </button>
         </div>
     </aside>
 
     <main class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-        <header class="h-16 bg-[#f4ebd9] border-b border-[#e6d5ba] flex items-center justify-between px-6 shrink-0">
+        <header class="h-16 bg-[#f4ebd9] border-b border-[#e6d5ba] flex items-center px-6 shrink-0">
             <h1 class="text-lg font-bold text-amber-900">Lokatsiyalar boshqaruvi</h1>
-
-            <button onclick="handleLogout()" class="flex items-center space-x-2 bg-white hover:bg-red-50 text-red-700 border border-[#e6d5ba] px-4 py-2 rounded-lg text-sm font-bold transition cursor-pointer shadow-xs">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Log out</span>
-            </button>
         </header>
 
         <div class="p-6 flex-1 overflow-y-auto">
+
             <div class="bg-white p-4 rounded-xl border border-[#e6d5ba] mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-xs">
                 <div class="flex flex-1 flex-col sm:flex-row gap-2">
                     <div class="relative flex-1 max-w-xs">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400 text-sm"></i>
-                        <input type="text" id="admin-search" oninput="filterTableData()" placeholder="Nomi bo'yicha qidirish..." class="w-full pl-9 pr-4 py-2 bg-[#fdfcf9] border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none focus:border-amber-600">
+                        <input type="text" id="admin-search" oninput="filterTableData()" placeholder="Nomi bo'yicha qidirish..."
+                            class="w-full pl-9 pr-4 py-2 bg-[#fdfcf9] border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none focus:border-amber-600">
                     </div>
-                    <select id="admin-filter" onchange="filterTableData()" class="px-3 py-2 bg-[#fdfcf9] border border-[#e6d5ba] rounded-lg text-sm text-gray-700 focus:outline-none focus:border-amber-600">
+                    <select id="admin-filter" onchange="filterTableData()"
+                        class="px-3 py-2 bg-[#fdfcf9] border border-[#e6d5ba] rounded-lg text-sm text-gray-700 focus:outline-none focus:border-amber-600">
                         <option value="">Barcha kategoriyalar</option>
                         <option value="stadium">Mini-stadion</option>
                         <option value="playstation">Playstation</option>
@@ -60,7 +56,8 @@
                         <option value="billiard">Billiard</option>
                     </select>
                 </div>
-                <button onclick="openFormModal()" class="bg-amber-700 hover:bg-amber-800 text-white font-medium text-sm px-4 py-2 rounded-lg flex items-center space-x-2 transition shadow-md cursor-pointer">
+                <button onclick="openFormModal()"
+                    class="bg-amber-700 hover:bg-amber-800 text-white font-medium text-sm px-4 py-2 rounded-lg flex items-center space-x-2 transition shadow-md cursor-pointer">
                     <i class="fa-solid fa-plus"></i>
                     <span>Yangi Lokatsiya</span>
                 </button>
@@ -79,11 +76,11 @@
                                 <th class="px-6 py-4 text-right">Amallar</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-table-body" class="divide-y divide-[#e6d5ba]">
-                        </tbody>
+                        <tbody id="admin-table-body" class="divide-y divide-[#e6d5ba]"></tbody>
                     </table>
                 </div>
             </div>
+
         </div>
     </main>
 
@@ -91,7 +88,9 @@
         <div class="bg-[#fbf8f3] border border-[#e6d5ba] rounded-xl w-full max-w-lg shadow-2xl overflow-hidden">
             <div class="px-6 py-4 border-b border-[#e6d5ba] flex justify-between items-center bg-[#f4ebd9]">
                 <h3 id="modal-title" class="text-base font-bold text-amber-900">Yangi joy qo'shish</h3>
-                <button onclick="closeFormModal()" class="text-amber-800 hover:text-black text-lg cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeFormModal()" class="text-amber-800 hover:text-black text-lg cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
             <form id="crud-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
@@ -99,12 +98,14 @@
 
                 <div>
                     <label class="block text-xs font-semibold uppercase text-amber-900 mb-1.5">Obyekt Nomi</label>
-                    <input type="text" id="form-name" required class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none focus:border-amber-600">
+                    <input type="text" id="form-name" required
+                        class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none focus:border-amber-600">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold uppercase text-amber-900 mb-1.5">Kategoriya</label>
-                    <select id="form-category" class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none">
+                    <select id="form-category"
+                        class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none">
                         <option value="stadium">Mini-stadion</option>
                         <option value="playstation">Playstation</option>
                         <option value="pc_club">Kompyuter klub</option>
@@ -115,187 +116,38 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold uppercase text-amber-900 mb-1.5">Kenglik (Lat)</label>
-                        <input type="number" step="any" id="form-lat" required class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none">
+                        <input type="number" step="any" id="form-lat" required
+                            class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold uppercase text-amber-900 mb-1.5">Uzunlik (Lon)</label>
-                        <input type="number" step="any" id="form-lon" required class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none">
+                        <input type="number" step="any" id="form-lon" required
+                            class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold uppercase text-amber-900 mb-1.5">Obyekt Rasmi</label>
-                    <input type="file" id="form-image" accept="image/*" class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-600 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-700 file:text-white hover:file:bg-amber-800">
+                    <input type="file" id="form-image" accept="image/*"
+                        class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-600 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-700 file:text-white hover:file:bg-amber-800">
                 </div>
 
                 <div>
                     <label class="block text-xs font-semibold uppercase text-amber-900 mb-1.5">Tavsif</label>
-                    <textarea id="form-description" rows="2" class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none"></textarea>
+                    <textarea id="form-description" rows="2"
+                        class="w-full px-3 py-2 bg-white border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none"></textarea>
                 </div>
 
                 <div class="pt-4 flex justify-end space-x-2 border-t border-[#e6d5ba]">
-                    <button type="button" onclick="closeFormModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm cursor-pointer">Bekor qilish</button>
-                    <button type="submit" class="px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-sm font-semibold cursor-pointer">Saqlash</button>
+                    <button type="button" onclick="closeFormModal()"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm cursor-pointer">Bekor qilish</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-sm font-semibold cursor-pointer">Saqlash</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script>
-        const BACKEND_BASE = "http://127.0.0.1:8000";
-        const GET_API_URL = `${BACKEND_BASE}/management/api/locations`;
-        const CRUD_BASE_URL = `${BACKEND_BASE}/management/api/locations/`;
-        const LOGIN_PAGE_URL = `${BACKEND_BASE}/management/accounts/login/`;
-
-        let localData = [];
-
-        async function fetchAdminData() {
-            try {
-                const response = await fetch(GET_API_URL, { method: "GET" });
-                if (!response.ok) throw new Error("Xatolik");
-                localData = await response.json();
-                renderTable(localData);
-            } catch (err) {
-                console.error("Xatolik:", err);
-                document.getElementById('admin-table-body').innerHTML = `
-                    <tr><td colspan="6" class="px-6 py-4 text-center text-red-600 font-medium">Django server bilan ulanishda xatolik.</td></tr>
-                `;
-            }
-        }
-
-        function renderTable(data) {
-            const tbody = document.getElementById('admin-table-body');
-            tbody.innerHTML = '';
-
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Ma'lumot topilmadi</td></tr>`;
-                return;
-            }
-
-            data.forEach(item => {
-                let imageUrl = item.image;
-                if(imageUrl && !imageUrl.startsWith('http')) {
-                    imageUrl = BACKEND_BASE + imageUrl;
-                }
-
-                tbody.innerHTML += `
-                    <tr class="hover:bg-[#f4ebd9]/30 transition">
-                        <td class="px-6 py-4 font-mono text-xs text-gray-400">#${item.id}</td>
-                        <td class="px-6 py-4">
-                            ${imageUrl ? `<img src="${imageUrl}" class="w-12 h-12 object-cover rounded-lg border border-[#e6d5ba]" alt="img">` : `<div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-400">No img</div>`}
-                        </td>
-                        <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800 border border-amber-200">${item.category}</span></td>
-                        <td class="px-6 py-4 font-semibold text-gray-900">${item.name}</td>
-                        <td class="px-6 py-4 font-mono text-xs text-gray-500">${item.lat}, ${item.lon}</td>
-                        <td class="px-6 py-4 text-right space-x-3 whitespace-nowrap">
-                            <button onclick="openEditModal(${item.id})" class="text-amber-700 hover:text-amber-900 text-sm font-semibold cursor-pointer"><i class="fa-solid fa-pen-to-square mr-1"></i>Edit</button>
-                            <button onclick="deleteLocationItem(${item.id})" class="text-red-600 hover:text-red-800 text-sm font-semibold cursor-pointer"><i class="fa-solid fa-trash mr-1"></i>O'chirish</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function filterTableData() {
-            const searchValue = document.getElementById('admin-search').value.toLowerCase();
-            const filterValue = document.getElementById('admin-filter').value;
-            const filtered = localData.filter(item => {
-                const matchesSearch = item.name.toLowerCase().includes(searchValue);
-                const matchesFilter = filterValue === "" || item.category === filterValue;
-                return matchesSearch && matchesFilter;
-            });
-            renderTable(filtered);
-        }
-
-        function openFormModal() {
-            document.getElementById('crud-form').reset();
-            document.getElementById('form-id').value = '';
-            document.getElementById('modal-title').innerText = 'Yangi joy qo\'shish';
-            document.getElementById('crud-modal').classList.remove('hidden');
-        }
-
-        function closeFormModal() {
-            document.getElementById('crud-modal').classList.add('hidden');
-        }
-
-        function openEditModal(id) {
-            const target = localData.find(item => item.id === id);
-            if (!target) return;
-
-            document.getElementById('form-id').value = target.id;
-            document.getElementById('form-name').value = target.name;
-            document.getElementById('form-category').value = target.category;
-            document.getElementById('form-lat').value = target.lat;
-            document.getElementById('form-lon').value = target.lon;
-            document.getElementById('form-description').value = target.description || '';
-
-            document.getElementById('modal-title').innerText = 'Lokatsiyani tahrirlash';
-            document.getElementById('crud-modal').classList.remove('hidden');
-        }
-
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('form-id').value;
-
-            const formData = new FormData();
-            formData.append('name', document.getElementById('form-name').value);
-            formData.append('category', document.getElementById('form-category').value);
-            formData.append('lat', parseFloat(document.getElementById('form-lat').value));
-            formData.append('lon', parseFloat(document.getElementById('form-lon').value));
-            formData.append('description', document.getElementById('form-description').value);
-
-            const fileInput = document.getElementById('form-image');
-            if (fileInput.files.length > 0) {
-                formData.append('image', fileInput.files[0]);
-            }
-
-            let targetUrl = `${CRUD_BASE_URL}create/`;
-            let methodType = "POST";
-
-            if (id) {
-                targetUrl = `${CRUD_BASE_URL}${id}/update/`;
-                methodType = "PUT";
-            }
-
-            try {
-                const res = await fetch(targetUrl, {
-                    method: methodType,
-                    body: formData
-                });
-
-                if (res.ok) {
-                    closeFormModal();
-                    fetchAdminData();
-                } else {
-                    alert("Xatolik! Ma'lumotlarni saqlab bo'lmadi.");
-                }
-            } catch (err) {
-                console.error("Xatolik:", err);
-            }
-        }
-
-        async function deleteLocationItem(id) {
-            if (!confirm("Haqiqatan ham o'chirmoqchimisiz?")) return;
-            try {
-                const res = await fetch(`${CRUD_BASE_URL}${id}/delete/`, { method: "DELETE" });
-                if (res.ok) fetchAdminData();
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        // LOG OUT FUNKSIYASI
-        function handleLogout() {
-            if (confirm("Admin paneldan chiqishni xohlaysizmi?")) {
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.href = LOGIN_PAGE_URL;
-            }
-        }
-
-        window.onload = () => {
-            fetchAdminData();
-        };
-    </script>
+    <script src="{% static 'js/foradmin.js' %}"></script>
 </body>
 </html>

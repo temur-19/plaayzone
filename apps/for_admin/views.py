@@ -5,9 +5,9 @@ from django.contrib.auth import authenticate, login, logout
 
 
 def login_view(request):
-    if request.user.is_authenticated and request.user.is_superuser:
-        return redirect("index")
-
+    if request.user.is_authenticated :
+        if  request.user.is_superuser:
+            return redirect("index")
     error = None
 
     if request.method == "POST":
@@ -31,7 +31,11 @@ def login_view(request):
 
     return render(request, "for_admin/login.html", {"error": error})
 
-# Create your views here.
+@login_required(login_url="login")
+def index(request):
+    error = None
+    return render(request, 'for_admin/admin.html')
 
-
-
+def logout_view(request):
+    logout(request)
+    return redirect("foruser:home")

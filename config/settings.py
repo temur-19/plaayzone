@@ -110,6 +110,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+         'rest_framework.authentication.SessionAuthentication',
+         'rest_framework.authentication.TokenAuthentication',
+    ),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
@@ -128,6 +134,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 AUTH_USER_MODEL = 'foruser.CustomUser'
 CSRF_TRUSTED_ORIGINS = [
     'https://choking-ploy-boneless.ngrok-free.dev',
@@ -145,7 +152,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 LOGIN_URL = "/management/accounts/login/"
 LOGIN_REDIRECT_URL = "/management/"
-LOGOUT_REDIRECT_URL = "/management/accounts/login/"
+LOGOUT_REDIRECT_URL = '/management/'
 
 SESSION_COOKIE_AGE = 30
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
