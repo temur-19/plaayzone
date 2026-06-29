@@ -11,6 +11,6 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_filter = ('is_staff', 'is_active')
     search_fields = ('username', 'email')
 
-# Register your models here.
+
 
 

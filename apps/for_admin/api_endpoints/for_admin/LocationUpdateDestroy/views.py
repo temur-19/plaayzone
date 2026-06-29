@@ -9,6 +9,7 @@ class LocationUpdateView(UpdateAPIView):
     permission_classes = [IsAdminUser]
     queryset = Location.objects.all()
     serializer_class = LocationUpdateDestroySerializer
+    http_method_names = ['patch']
 
 class LocationDestroyView(DestroyAPIView):
     permission_classes = [IsAdminUser]

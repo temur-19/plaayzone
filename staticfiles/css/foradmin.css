@@ -1,4 +1,23 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body {
     background-color: #fbf8f3;
     color: #2d2a26;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f4ebd9;
+}
+::-webkit-scrollbar-thumb {
+    background: #d4a96a;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #b8864e;
 }

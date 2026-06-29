@@ -1,5 +1,4 @@
 from django.contrib.auth import views as auth_views
-from django.contrib.sitemaps.views import index
 from django.urls import path
 
 from apps.for_admin.api_endpoints.for_admin.LocationsList.views import LocationListView

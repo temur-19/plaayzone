@@ -11,6 +11,7 @@
 </head>
 <body class="font-sans flex h-screen overflow-hidden">
 
+    <!-- SIDEBAR -->
     <aside class="w-64 bg-[#f4ebd9] border-r border-[#e6d5ba] hidden md:flex flex-col justify-between h-full">
         <div>
             <div class="h-16 flex items-center px-6 border-b border-[#e6d5ba]">
@@ -18,33 +19,43 @@
                     <i class="fa-solid fa-gears mr-2"></i>GEO-ADMIN
                 </span>
             </div>
-            <div class="p-4">
+            <nav class="p-4">
                 <a href="#" class="flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-amber-700 text-white font-medium">
                     <i class="fa-solid fa-map-location-dot w-5"></i>
                     <span>Lokatsiyalar</span>
                 </a>
-            </div>
+            </nav>
         </div>
+
+        <!-- LOGOUT — form orqali, eng xavfsiz -->
         <div class="p-4 border-t border-[#e6d5ba]">
-            <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 font-bold border border-red-200 transition cursor-pointer text-left">
-                <i class="fa-solid fa-right-from-bracket w-5"></i>
-                <span>Chiqish</span>
-            </button>
+            <form method="POST" action="/management/logout/">
+                {% csrf_token %}
+                <button type="submit"
+                    class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-red-100 hover:bg-red-200 text-red-700 font-bold border border-red-200 transition cursor-pointer text-left">
+                    <i class="fa-solid fa-right-from-bracket w-5"></i>
+                    <span>Chiqish</span>
+                </button>
+            </form>
         </div>
     </aside>
 
+    <!-- MAIN -->
     <main class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+
         <header class="h-16 bg-[#f4ebd9] border-b border-[#e6d5ba] flex items-center px-6 shrink-0">
             <h1 class="text-lg font-bold text-amber-900">Lokatsiyalar boshqaruvi</h1>
         </header>
 
         <div class="p-6 flex-1 overflow-y-auto">
 
+            <!-- FILTER + ADD -->
             <div class="bg-white p-4 rounded-xl border border-[#e6d5ba] mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-xs">
                 <div class="flex flex-1 flex-col sm:flex-row gap-2">
                     <div class="relative flex-1 max-w-xs">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400 text-sm"></i>
-                        <input type="text" id="admin-search" oninput="filterTableData()" placeholder="Nomi bo'yicha qidirish..."
+                        <input type="text" id="admin-search" oninput="filterTableData()"
+                            placeholder="Nomi bo'yicha qidirish..."
                             class="w-full pl-9 pr-4 py-2 bg-[#fdfcf9] border border-[#e6d5ba] rounded-lg text-sm text-gray-800 focus:outline-none focus:border-amber-600">
                     </div>
                     <select id="admin-filter" onchange="filterTableData()"
@@ -63,6 +74,7 @@
                 </button>
             </div>
 
+            <!-- TABLE -->
             <div class="bg-white rounded-xl border border-[#e6d5ba] overflow-hidden shadow-xs">
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse text-left text-sm text-gray-700">
@@ -84,8 +96,10 @@
         </div>
     </main>
 
+    <!-- MODAL -->
     <div id="crud-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
         <div class="bg-[#fbf8f3] border border-[#e6d5ba] rounded-xl w-full max-w-lg shadow-2xl overflow-hidden">
+
             <div class="px-6 py-4 border-b border-[#e6d5ba] flex justify-between items-center bg-[#f4ebd9]">
                 <h3 id="modal-title" class="text-base font-bold text-amber-900">Yangi joy qo'shish</h3>
                 <button onclick="closeFormModal()" class="text-amber-800 hover:text-black text-lg cursor-pointer">
@@ -140,9 +154,13 @@
 
                 <div class="pt-4 flex justify-end space-x-2 border-t border-[#e6d5ba]">
                     <button type="button" onclick="closeFormModal()"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm cursor-pointer">Bekor qilish</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-sm font-semibold cursor-pointer">Saqlash</button>
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm cursor-pointer">
+                        Bekor qilish
+                    </button>
+                    <button type="submit" id="submit-btn"
+                        class="px-4 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-sm font-semibold cursor-pointer">
+                        Saqlash
+                    </button>
                 </div>
             </form>
         </div>

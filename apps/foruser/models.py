@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(
-        CustomUser,  # django User emas, o'zingizning model
+        CustomUser,
         on_delete=models.CASCADE,
         related_name='profile'
     )

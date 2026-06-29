@@ -1,4 +1,3 @@
-# headapp/views.py
 from django.shortcuts import render, redirect
 from django.conf import settings
 from rest_framework.decorators import api_view
@@ -31,6 +30,7 @@ def map_view(request):
         'api_key': settings.YANDEX_MAPS_API_KEY
     }
     return render(request, 'headapp/index.html', context)
+
 
 @login_required
 def profile_view(request):

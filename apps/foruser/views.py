@@ -1,8 +1,3 @@
-from django.contrib import auth
-from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordResetForm
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from .forms import RegisterForm
@@ -29,11 +24,9 @@ def log_in(request):
         if user is not None:
             login(request, user)
 
-            # Redirect to a success page.
             return redirect('headapp:map')
             ...
         else:
-            # Return an 'invalid login' error message.
             messages.error(request,"login yoki parol xato")
     return render(request, 'foruser/login.html', {'form':RegisterForm})
 
