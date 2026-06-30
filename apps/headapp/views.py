@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from django.contrib.auth import logout
+from rest_framework.permissions import IsAdminUser
 
 from .models import Location
 from django.contrib.auth.decorators import login_required
@@ -32,7 +34,6 @@ def map_view(request):
     return render(request, 'headapp/index.html', context)
 
 
-@login_required
 def profile_view(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
 
@@ -40,9 +41,10 @@ def profile_view(request):
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-        return redirect('headapp:map')  # saqlangach mapga qaytadi
+        return redirect('headapp:map')
 
     return redirect('headapp:map')
 def logout_view(request):
+    logout(request)
     return redirect('foruser:login')
 

@@ -12,8 +12,8 @@ from .models import CustomUser
 
 
 def home(request):
-    locations = Location.objects.count
-    users = CustomUser.objects.count
+    locations = Location.objects.count()
+    users = CustomUser.objects.count()
     return render(request, 'foruser/home.html', {'locations':locations,
                                                                             'users':users})
 def log_in(request):

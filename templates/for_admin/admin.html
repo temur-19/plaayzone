@@ -1,0 +1,319 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — PlayZone.uz</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #0a0e17; color: #f1f5f9; font-family: 'DM Sans', sans-serif; }
+        .font-display { font-family: 'Poppins', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0e17; }
+        ::-webkit-scrollbar-thumb { background: #1d263d; border-radius: 999px; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-[#0f1420] border-r border-white/[0.07] hidden md:flex flex-col justify-between h-full">
+        <div>
+            <div class="h-16 flex items-center px-6 border-b border-white/[0.07]">
+                <span class="text-lg font-bold font-display flex items-center gap-2 text-slate-100">
+                    <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f5c518] to-[#d4a017] flex items-center justify-center text-[#161300] text-xs font-bold">PZ</span>
+                    PlayZone <span class="text-[#f5c518]">Admin</span>
+                </span>
+            </div>
+            <div class="p-4">
+                <a href="#" class="flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-[#f5c518] text-[#161300] font-semibold text-sm">
+                    <i class="bi bi-geo-alt-fill w-5"></i>
+                    <span>Lokatsiyalar</span>
+                </a>
+            </div>
+        </div>
+        <div class="p-4 border-t border-white/[0.07]">
+            <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 font-semibold border border-red-500/20 transition cursor-pointer text-left text-sm">
+                <i class="bi bi-box-arrow-right w-5"></i>
+                <span>Chiqish</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+        <header class="h-16 bg-[#0f1420] border-b border-white/[0.07] flex items-center px-6 shrink-0">
+            <h1 class="text-base font-bold font-display text-slate-100">Lokatsiyalar boshqaruvi</h1>
+        </header>
+
+        <div class="p-6 flex-1 overflow-y-auto">
+
+            <div class="bg-[#12182a] p-4 rounded-xl border border-white/[0.08] mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex flex-1 flex-col sm:flex-row gap-2">
+                    <div class="relative flex-1 max-w-xs">
+                        <i class="bi bi-search absolute left-3 top-3 text-slate-500 text-sm"></i>
+                        <input type="text" id="admin-search" oninput="filterTableData()" placeholder="Nomi bo'yicha qidirish..."
+                            class="w-full pl-9 pr-4 py-2 bg-[#171f33] border border-white/[0.1] rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#d4a017]">
+                    </div>
+                    <select id="admin-filter" onchange="filterTableData()"
+                        class="px-3 py-2 bg-[#171f33] border border-white/[0.1] rounded-lg text-sm text-slate-200 focus:outline-none focus:border-[#d4a017]">
+                        <option value="">Barcha kategoriyalar</option>
+                        <option value="stadium">Mini-stadion</option>
+                        <option value="playstation">Playstation</option>
+                        <option value="pc_club">Kompyuter klub</option>
+                        <option value="billiard">Billiard</option>
+                    </select>
+                </div>
+                <button onclick="openFormModal()"
+                    class="bg-[#f5c518] hover:bg-[#d4a017] text-[#161300] font-semibold text-sm px-4 py-2 rounded-lg flex items-center space-x-2 transition cursor-pointer">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Yangi Lokatsiya</span>
+                </button>
+            </div>
+
+            <div class="bg-[#12182a] rounded-xl border border-white/[0.08] overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-left text-sm text-slate-300">
+                        <thead class="bg-white/[0.03] text-xs font-semibold uppercase text-slate-400 border-b border-white/[0.08]">
+                            <tr>
+                                <th class="px-6 py-4">ID</th>
+                                <th class="px-6 py-4">Rasm</th>
+                                <th class="px-6 py-4">Kategoriya</th>
+                                <th class="px-6 py-4">Nomi</th>
+                                <th class="px-6 py-4">Koordinatalar (Lat / Lon)</th>
+                                <th class="px-6 py-4 text-right">Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="divide-y divide-white/[0.06]"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL -->
+    <div id="crud-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-[#171f33] border border-white/[0.1] rounded-xl w-full max-w-lg shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-white/[0.08] flex justify-between items-center bg-white/[0.02]">
+                <h3 id="modal-title" class="text-base font-bold font-display text-slate-100">Yangi joy qo'shish</h3>
+                <button onclick="closeFormModal()" class="text-slate-400 hover:text-slate-100 text-lg cursor-pointer">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <form id="crud-form" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="form-id">
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Obyekt Nomi</label>
+                    <input type="text" id="form-name" required
+                        class="w-full px-3 py-2 bg-[#0f1420] border border-white/[0.1] rounded-lg text-sm text-slate-100 focus:outline-none focus:border-[#d4a017]">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Kategoriya</label>
+                    <select id="form-category"
+                        class="w-full px-3 py-2 bg-[#0f1420] border border-white/[0.1] rounded-lg text-sm text-slate-100 focus:outline-none focus:border-[#d4a017]">
+                        <option value="stadium">Mini-stadion</option>
+                        <option value="playstation">Playstation</option>
+                        <option value="pc_club">Kompyuter klub</option>
+                        <option value="billiard">Billiard</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Kenglik (Lat)</label>
+                        <input type="number" step="any" id="form-lat" required
+                            class="w-full px-3 py-2 bg-[#0f1420] border border-white/[0.1] rounded-lg text-sm text-slate-100 focus:outline-none focus:border-[#d4a017]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Uzunlik (Lon)</label>
+                        <input type="number" step="any" id="form-lon" required
+                            class="w-full px-3 py-2 bg-[#0f1420] border border-white/[0.1] rounded-lg text-sm text-slate-100 focus:outline-none focus:border-[#d4a017]">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Obyekt Rasmi</label>
+                    <input type="file" id="form-image" accept="image/*"
+                        class="w-full px-3 py-2 bg-[#0f1420] border border-white/[0.1] rounded-lg text-sm text-slate-400 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#f5c518] file:text-[#161300] hover:file:bg-[#d4a017]">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1.5">Tavsif</label>
+                    <textarea id="form-description" rows="2"
+                        class="w-full px-3 py-2 bg-[#0f1420] border border-white/[0.1] rounded-lg text-sm text-slate-100 focus:outline-none focus:border-[#d4a017]"></textarea>
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-2 border-t border-white/[0.08]">
+                    <button type="button" onclick="closeFormModal()"
+                        class="px-4 py-2 bg-white/[0.06] text-slate-300 rounded-lg text-sm cursor-pointer hover:bg-white/[0.1]">Bekor qilish</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-[#f5c518] hover:bg-[#d4a017] text-[#161300] rounded-lg text-sm font-semibold cursor-pointer">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const CRUD_BASE_URL = "/management/api/locations/";
+        const LOGIN_PAGE_URL = "/management/login/";
+        const LOGOUT_URL = "/management/logout/";
+
+        let localData = [];
+
+        window.onload = fetchAdminData;
+
+        async function fetchAdminData() {
+            try {
+                const res = await fetch(CRUD_BASE_URL, { credentials: 'include' });
+                if (!res.ok) throw new Error();
+                localData = await res.json();
+                renderTable(localData);
+            } catch {
+                document.getElementById('admin-table-body').innerHTML =
+                    `<tr><td colspan="6" class="px-6 py-10 text-center text-red-400 font-medium">Server bilan ulanishda xatolik yoki ruxsat yo'q.</td></tr>`;
+            }
+        }
+
+        const CATEGORY_LABELS = {
+            stadium: 'Mini-stadion',
+            playstation: 'Playstation',
+            pc_club: 'Kompyuter klub',
+            billiard: 'Billiard',
+        };
+
+        function renderTable(data) {
+            const tbody = document.getElementById('admin-table-body');
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-slate-500">Ma'lumot topilmadi</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = data.map(item => {
+                const imageUrl = item.image || null;
+                return `
+                <tr class="hover:bg-white/[0.03] transition">
+                    <td class="px-6 py-4 font-mono text-xs text-slate-500">#${item.id}</td>
+                    <td class="px-6 py-4">
+                        ${imageUrl
+                            ? `<img src="${imageUrl}" class="w-12 h-12 object-cover rounded-lg border border-white/[0.1]">`
+                            : `<div class="w-12 h-12 bg-white/[0.05] rounded-lg flex items-center justify-center text-[10px] text-slate-500">No img</div>`}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-[#f5c518]/10 text-[#f5c518] border border-[#f5c518]/20">${CATEGORY_LABELS[item.category] || item.category}</span>
+                    </td>
+                    <td class="px-6 py-4 font-semibold text-slate-100">${item.name}</td>
+                    <td class="px-6 py-4 font-mono text-xs text-slate-400">${item.lat}, ${item.lon}</td>
+                    <td class="px-6 py-4 text-right space-x-3 whitespace-nowrap">
+                        <button onclick="openEditModal(${item.id})" class="text-[#f5c518] hover:text-[#d4a017] text-sm font-semibold cursor-pointer">
+                            <i class="bi bi-pencil-square mr-1"></i>Tahrirlash
+                        </button>
+                        <button onclick="deleteLocationItem(${item.id})" class="text-red-400 hover:text-red-300 text-sm font-semibold cursor-pointer">
+                            <i class="bi bi-trash mr-1"></i>O'chirish
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function filterTableData() {
+            const search = document.getElementById('admin-search').value.toLowerCase();
+            const category = document.getElementById('admin-filter').value;
+            renderTable(localData.filter(item =>
+                item.name.toLowerCase().includes(search) &&
+                (category === '' || item.category === category)
+            ));
+        }
+
+        function openFormModal() {
+            document.getElementById('crud-form').reset();
+            document.getElementById('form-id').value = '';
+            document.getElementById('modal-title').innerText = "Yangi joy qo'shish";
+            document.getElementById('crud-modal').classList.remove('hidden');
+        }
+
+        function closeFormModal() {
+            document.getElementById('crud-modal').classList.add('hidden');
+        }
+
+        function openEditModal(id) {
+            const item = localData.find(i => i.id === id);
+            if (!item) return;
+            document.getElementById('form-id').value = item.id;
+            document.getElementById('form-name').value = item.name;
+            document.getElementById('form-category').value = item.category;
+            document.getElementById('form-lat').value = item.lat;
+            document.getElementById('form-lon').value = item.lon;
+            document.getElementById('form-description').value = item.description || '';
+            document.getElementById('modal-title').innerText = 'Lokatsiyani tahrirlash';
+            document.getElementById('crud-modal').classList.remove('hidden');
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('form-id').value;
+
+            const formData = new FormData();
+            formData.append('name', document.getElementById('form-name').value);
+            formData.append('category', document.getElementById('form-category').value);
+            formData.append('lat', parseFloat(document.getElementById('form-lat').value));
+            formData.append('lon', parseFloat(document.getElementById('form-lon').value));
+            formData.append('description', document.getElementById('form-description').value);
+
+            const fileInput = document.getElementById('form-image');
+            if (fileInput.files.length > 0) formData.append('image', fileInput.files[0]);
+
+            const url = id ? `${CRUD_BASE_URL}${id}/update/` : `${CRUD_BASE_URL}create/`;
+            const method = id ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    body: formData,
+                    credentials: 'include',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                });
+                if (res.ok) {
+                    closeFormModal();
+                    fetchAdminData();
+                } else {
+                    alert(`Xatolik! Ma'lumotlarni saqlab bo'lmadi. (Status: ${res.status})`);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteLocationItem(id) {
+            if (!confirm("Haqiqatan ham o'chirmoqchimisiz?")) return;
+            try {
+                const res = await fetch(`${CRUD_BASE_URL}${id}/delete/`, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') }
+                });
+                if (res.ok) fetchAdminData();
+                else alert("O'chirishda xatolik yuz berdi.");
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function handleLogout() {
+            window.location.href = LOGOUT_URL;
+        }
+
+        function getCookie(name) {
+            for (const cookie of document.cookie.split(';')) {
+                const [key, val] = cookie.trim().split('=');
+                if (key === name) return decodeURIComponent(val);
+            }
+            return null;
+        }
+    </script>
+</body>
+</html>

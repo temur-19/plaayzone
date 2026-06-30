@@ -17,8 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = ['choking-ploy-boneless.ngrok-free.dev', 'localhost', '127.0.0.1']
 
 
@@ -105,9 +104,6 @@ REST_FRAMEWORK = {
          'rest_framework.authentication.SessionAuthentication',
          'rest_framework.authentication.TokenAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAdminUser',
-    ],
 }
 
 # Internationalization

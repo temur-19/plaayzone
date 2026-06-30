@@ -2,6 +2,6 @@
 .idea
 media
 venv
-staticfiles        ← qo'shing
-__pycache__        ← qo'shing
-*.pyc              ← qo'shing
+staticfiles
+__pycache__
+*.pyc
