@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.headapp.models import Location
+from apps.map.models import Location
 
 class LocationCreatSerializer(serializers.ModelSerializer):
     class Meta:

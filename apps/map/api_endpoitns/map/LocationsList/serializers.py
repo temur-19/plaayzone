@@ -1,7 +1,7 @@
 from rest_framework import serializers
-
 from apps.map.models import Location
-class LocationUpdateDestroySerializer(serializers.ModelSerializer):
+
+class LocationsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = '__all__'
+        fields = "__all__"

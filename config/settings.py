@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.foruser',
     'rest_framework',
-    'apps.headapp',
+    'apps.map',
     'apps.for_admin',
 ]
 

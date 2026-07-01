@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import RegisterForm
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
-from apps.headapp.models import Location
+from apps.map.models import Location
 from .models import CustomUser
 
 
@@ -14,8 +14,8 @@ from .models import CustomUser
 def home(request):
     locations = Location.objects.count()
     users = CustomUser.objects.count()
-    return render(request, 'foruser/home.html', {'locations':locations,
-                                                                            'users':users})
+    return render(request, 'foruser/home.html', {'locations':locations, 'users':users})
+
 def log_in(request):
     if request.method == 'POST':
         username = request.POST["username"]

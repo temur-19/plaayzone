@@ -2,7 +2,7 @@ from rest_framework.generics import UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAdminUser
 
 from apps.for_admin.api_endpoints.for_admin.LocationUpdateDestroy.serializers import LocationUpdateDestroySerializer
-from apps.headapp.models import Location
+from apps.map.models import Location
 
 
 class LocationUpdateView(UpdateAPIView):
