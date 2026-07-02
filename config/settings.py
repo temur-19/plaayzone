@@ -30,8 +30,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.foruser',
     'rest_framework',
+    'rest_framework_simplejwt',
+
+    #apps
+    'apps.foruser',
     'apps.map',
     'apps.for_admin',
 ]
@@ -100,10 +103,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':(
-         'rest_framework.authentication.SessionAuthentication',
-         'rest_framework.authentication.TokenAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
 }
 
 # Internationalization
@@ -141,6 +150,5 @@ LOGIN_URL = "/management/login/"
 LOGIN_REDIRECT_URL = "/management/"
 LOGOUT_REDIRECT_URL = '/management/'
 
-SESSION_COOKIE_AGE = 60
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True

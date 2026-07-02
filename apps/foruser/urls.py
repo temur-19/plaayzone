@@ -1,13 +1,17 @@
 from django.urls import path,reverse_lazy
-from .views import log_in, signup, home
+from rest_framework_simplejwt.views import TokenRefreshView
+
+
+from .api_endpoints.foruser.Login.views import login_api
+from .api_endpoints.foruser.Register.views import signup_api
 from django.contrib.auth import views as auth_views
 
 app_name = 'foruser'
 
 urlpatterns = [
-    path('',home,name='home'),
-    path('login/', log_in, name='login'),
-    path('signup/', signup, name='signup'),
+    path('login/', login_api, name='login'),
+    path('signup/', signup_api, name='signup'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('password_reset/',
          auth_views.PasswordResetView.as_view(
              template_name='foruser/password_reset.html',

@@ -24,7 +24,7 @@ def log_in(request):
         if user is not None:
             login(request, user)
 
-            return redirect('headapp:map')
+            return redirect('map:map')
             ...
         else:
             messages.error(request,"login yoki parol xato")
