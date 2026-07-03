@@ -1,5 +1,3 @@
-from struct import error
-
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 

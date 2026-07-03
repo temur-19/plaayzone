@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 
-from apps.map.api_endpoitns.map.ProfileGet.serializers import ProfileSerializer
+from apps.map.api_endpoints.map.ProfileGet.serializers import ProfileSerializer
 
 
 

@@ -1,4 +1,4 @@
-from apps.map.api_endpoitns.map.LocationsList.serializers import LocationsSerializers
+from apps.map.api_endpoints.map.LocationsList.serializers import LocationsSerializers
 from rest_framework.generics import ListAPIView
 
 from apps.map.models import Location

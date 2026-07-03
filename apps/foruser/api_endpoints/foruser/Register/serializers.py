@@ -8,8 +8,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
     class Meta:
         model = CustomUser
-        fields = "__all__"
-
+        fields = ('username', 'email', 'phone', 'password1', 'confirm_password')
     def validate(self, data):
         if data["password1"] != data["confirm_password"]:
             raise serializers.ValidationError("Passwords don't match")
