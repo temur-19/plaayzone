@@ -1,0 +1,11 @@
+import EmptyState from "./EmptyState.jsx";
+import LocationCard from "./LocationCard.jsx";
+
+export default function Sidebar({ locations, selectedId, onSelect, distances }) {
+  return (
+    <aside className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto rounded-[2rem] border border-white/10 bg-[#020617]/85 p-3 shadow-[0_24px_80px_rgba(0,0,0,0.50)] backdrop-blur-xl lg:max-h-[calc(100vh-9rem)] lg:w-[390px]">
+      <div className="px-2 py-1"><h2 className="text-xl font-black text-white">Lokatsiyalar</h2><p className="mt-1 text-sm text-slate-400">Marker yoki cardni tanlang.</p></div>
+      {locations.length ? locations.map((location) => <LocationCard distance={distances[location.id]} key={location.id} location={location} onClick={onSelect} selected={selectedId === location.id} />) : <EmptyState />}
+    </aside>
+  );
+}

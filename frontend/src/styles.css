@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #ffffff;
+  background: #020617;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: radial-gradient(circle at top left, rgba(250, 204, 21, 0.12), transparent 28rem), #020617;
+}
+
+::selection {
+  background: rgba(250, 204, 21, 0.35);
+  color: #ffffff;
+}
+
+@layer components {
+  .glass {
+    @apply border border-white/10 bg-[#111827]/75 shadow-[0_24px_80px_rgba(0,0,0,0.42)] backdrop-blur-xl;
+  }
+
+  .btn {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl px-5 py-2.5 text-sm font-black transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 focus:ring-offset-[#020617] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-yellow-300 to-yellow-500 text-slate-950 shadow-[0_0_30px_rgba(250,204,21,0.28)] hover:-translate-y-0.5 hover:shadow-[0_0_42px_rgba(250,204,21,0.40)];
+  }
+
+  .btn-secondary {
+    @apply border border-white/10 bg-white/5 text-white hover:border-yellow-300/70 hover:bg-yellow-300/10 hover:text-yellow-200;
+  }
+
+  .btn-danger {
+    @apply bg-red-500/15 text-red-200 ring-1 ring-red-400/30 hover:bg-red-500/25;
+  }
+
+  .input {
+    @apply w-full rounded-2xl border border-white/10 bg-[#020617]/70 px-4 py-3 text-sm font-semibold text-white outline-none transition placeholder:text-slate-500 focus:border-yellow-300 focus:ring-4 focus:ring-yellow-300/10 disabled:cursor-not-allowed disabled:text-slate-500;
+  }
+
+  .label {
+    @apply text-sm font-black text-slate-300;
+  }
+
+  .panel {
+    @apply glass rounded-3xl;
+  }
+
+  .yellow-pill {
+    @apply rounded-full bg-yellow-300 px-3 py-1 text-xs font-black text-slate-950 shadow-[0_0_24px_rgba(250,204,21,0.28)];
+  }
+}

@@ -1,0 +1,21 @@
+import { MapPin, Navigation } from "lucide-react";
+import { categoryMeta, getLocationImageUrl } from "../api/locationApi.js";
+
+export default function LocationCard({ location, distance, selected, onClick }) {
+  const meta = categoryMeta[location.category] || { label: location.category, color: "#facc15" };
+  const image = getLocationImageUrl(location);
+
+  return (
+    <button className={`w-full overflow-hidden rounded-3xl border bg-[#111827]/85 text-left shadow-lg transition hover:-translate-y-1 ${selected ? "border-yellow-300 shadow-[0_0_32px_rgba(250,204,21,0.22)]" : "border-white/10 hover:border-yellow-300/50"}`} onClick={() => onClick(location)} type="button">
+      <div className="flex gap-3 p-3">
+        <div className="h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#020617]">{image ? <img className="h-full w-full object-cover" src={image} alt={location.name} /> : <div className="grid h-full place-items-center"><MapPin className="text-yellow-300" size={24} /></div>}</div>
+        <div className="min-w-0 flex-1">
+          <span className="rounded-full px-2.5 py-1 text-xs font-black text-slate-950" style={{ backgroundColor: meta.color }}>{meta.label}</span>
+          <h3 className="mt-2 truncate text-base font-black text-white">{location.name}</h3>
+          <p className="mt-1 line-clamp-2 text-sm leading-5 text-slate-400">{location.description || "Tavsif kiritilmagan."}</p>
+          <p className="mt-2 inline-flex items-center gap-1 text-xs font-black text-yellow-200"><Navigation size={13} />{distance == null ? "Masofa mavjud emas" : `${distance.toFixed(1)} km`}</p>
+        </div>
+      </div>
+    </button>
+  );
+}
