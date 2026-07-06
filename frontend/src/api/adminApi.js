@@ -30,7 +30,7 @@ export async function deleteAdminLocation(id) {
 
 function toLocationFormData(payload) {
   const formData = new FormData();
-  ["name", "category", "lat", "lon", "description", "image"].forEach((key) => {
+  ["name", "category", "phone_number", "price", "lat", "lon", "description", "image"].forEach((key) => {
     const value = payload[key];
     if (value !== undefined && value !== null && value !== "") {
       formData.append(key, value);

@@ -25,4 +25,3 @@ def admin_login(request):
                 "id":user.id,
                 }
     })
-

@@ -5,6 +5,8 @@ import { categoryOptions } from "../api/locations.js";
 const emptyForm = {
   category: "stadium",
   name: "",
+  phone_number: "",
+  price: "",
   lat: "",
   lon: "",
   description: "",
@@ -19,6 +21,8 @@ export default function LocationForm({ initialValues, submitLabel = "Save locati
       setForm({
         category: initialValues.category || "stadium",
         name: initialValues.name || "",
+        phone_number: initialValues.phone_number || "",
+        price: initialValues.price ?? "",
         lat: initialValues.lat ?? "",
         lon: initialValues.lon ?? "",
         description: initialValues.description || "",
@@ -56,6 +60,14 @@ export default function LocationForm({ initialValues, submitLabel = "Save locati
               </option>
             ))}
           </select>
+        </label>
+        <label className="space-y-2">
+          <span className="label">Phone</span>
+          <input className="input" name="phone_number" required maxLength={9} minLength={9} pattern="[0-9]{9}" placeholder="901234567" value={form.phone_number} onChange={updateField} />
+        </label>
+        <label className="space-y-2">
+          <span className="label">Price</span>
+          <input className="input" name="price" required type="number" min="0" step="0.01" value={form.price} onChange={updateField} />
         </label>
         <label className="space-y-2">
           <span className="label">Latitude</span>

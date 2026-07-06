@@ -10,6 +10,8 @@ class Location(models.Model):
     ]
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='stadium')
     name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=9, null=False, default = '998')
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     lat = models.FloatField()
     lon = models.FloatField()
     description = models.TextField(blank=True, null=True)
