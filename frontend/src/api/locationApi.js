@@ -9,10 +9,10 @@ export const categories = [
 ];
 
 export const categoryMeta = {
-  playstation: { label: "PlayStation", color: "#ef4444" },
-  stadium: { label: "Stadion", color: "#22c55e" },
-  billiard: { label: "Billiard", color: "#a855f7" },
-  pc_club: { label: "PC Club", color: "#facc15" },
+  playstation: { label: "PlayStation", color: "#7c3aed" },
+  stadium: { label: "Stadion", color: "#16a34a" },
+  billiard: { label: "Billiard", color: "#dc2626" },
+  pc_club: { label: "PC Club", color: "#ea580c" },
 };
 
 export async function getLocations(category = "all") {

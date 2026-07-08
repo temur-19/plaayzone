@@ -139,6 +139,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 AUTH_USER_MODEL = 'foruser.CustomUser'
 CSRF_TRUSTED_ORIGINS = [
     'https://choking-ploy-boneless.ngrok-free.dev',

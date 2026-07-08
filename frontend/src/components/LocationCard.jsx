@@ -14,7 +14,7 @@ export default function LocationCard({ location, distance, selected, onClick }) 
           <span className="rounded-full px-2.5 py-1 text-xs font-black text-slate-950" style={{ backgroundColor: meta.color }}>{meta.label}</span>
           <h3 className="mt-2 truncate text-base font-black text-white">{location.name}</h3>
           <p className="mt-1 line-clamp-2 text-sm leading-5 text-slate-400">{location.description || "Tavsif kiritilmagan."}</p>
-          <div className="mt-2 flex flex-wrap gap-2 text-xs font-black text-yellow-200"><span className="inline-flex items-center gap-1"><Wallet size={13} />{price}</span><span className="inline-flex items-center gap-1"><Navigation size={13} />{distance == null ? "Masofa mavjud emas" : `${distance.toFixed(1)} km`}</span></div>
+          <div className="mt-2 flex flex-wrap gap-2 text-xs font-black text-yellow-200"><span className="inline-flex items-center gap-1"><Wallet size={13} />{price}</span><span className="inline-flex items-center gap-1"><Navigation size={13} />{distance == null ? "Masofa mavjud emas" : `${distance.toFixed(1)} km uzoqlikda`}</span></div>
         </div>
       </div>
     </button>
