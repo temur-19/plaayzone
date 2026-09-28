@@ -37,6 +37,7 @@ function PublicShell() {
         <Routes>
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
+          <Route path="admin/login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

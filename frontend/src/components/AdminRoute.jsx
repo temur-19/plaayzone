@@ -6,7 +6,7 @@ export default function AdminRoute({ children }) {
   const { isAuthenticated, isAdmin } = useAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location, adminMode: true }} />;
+    return <Navigate to="/admin/login" replace state={{ from: location }} />;
   }
 
   if (!isAdmin) {

@@ -8,7 +8,8 @@ export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
   const { signIn } = useAuth();
-  const [form, setForm] = useState({ username: "", password: "", adminMode: Boolean(location.state?.adminMode) });
+  const isAdminLogin = location.pathname === "/admin/login";
+  const [form, setForm] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -17,8 +18,11 @@ export default function Login() {
     setLoading(true);
     setError("");
     try {
-      const auth = await signIn(form);
-      navigate(location.state?.from?.pathname || (auth.isAdmin ? "/management/admin" : "/map"), { replace: true });
+      const auth = await signIn({ ...form, adminMode: isAdminLogin });
+      const destination = isAdminLogin
+        ? "/management/admin"
+        : (location.state?.from?.pathname || (auth.isAdmin ? "/management/admin" : "/map"));
+      navigate(destination, { replace: true });
     } catch (err) {
       setError(getErrorMessage(err, "Login yoki parol xato."));
     } finally {
@@ -26,7 +30,7 @@ export default function Login() {
     }
   };
 
-  return <AuthShell title="Yaqiningdagi o‘yin va sport joylarini kashf eting"><form className="glass rounded-[2rem] p-6 sm:p-8" onSubmit={submit}><div className="mb-6"><span className="yellow-pill">Kirish</span><h1 className="mt-4 text-3xl font-black text-white">Accountga kirish</h1><p className="mt-2 text-sm text-slate-400">Kirgandan so‘ng xarita sahifasiga yo‘naltirilasiz.</p></div>{error && <div className="mb-4 rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-200">{error}</div>}<div className="space-y-4"><label className="block space-y-2"><span className="label">Username</span><input className="input" required value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} /></label><label className="block space-y-2"><span className="label">Parol</span><input className="input" required type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} /></label><label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm font-black text-slate-300"><input checked={form.adminMode} type="checkbox" onChange={(e) => setForm({ ...form, adminMode: e.target.checked })} />Admin sifatida kirish</label><button className="btn btn-primary w-full" disabled={loading}><LogIn size={17} />{loading ? "Kirilmoqda..." : "Kirish"}</button></div><p className="mt-5 text-center text-sm text-slate-400">Account yo‘qmi? <Link className="font-black text-yellow-300 hover:underline" to="/register">Ro‘yxatdan o‘tish</Link></p></form></AuthShell>;
+  return <AuthShell title="Yaqiningdagi o‘yin va sport joylarini kashf eting"><form className="glass rounded-[2rem] p-6 sm:p-8" onSubmit={submit}><div className="mb-6"><span className="yellow-pill">{isAdminLogin ? "Admin kirish" : "Kirish"}</span><h1 className="mt-4 text-3xl font-black text-white">{isAdminLogin ? "Admin panelga kirish" : "Accountga kirish"}</h1><p className="mt-2 text-sm text-slate-400">{isAdminLogin ? "Faqat administrator hisobi bilan kirish mumkin." : "Kirgandan so‘ng xarita sahifasiga yo‘naltirilasiz."}</p></div>{error && <div className="mb-4 rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-200">{error}</div>}<div className="space-y-4"><label className="block space-y-2"><span className="label">Username</span><input className="input" required value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} /></label><label className="block space-y-2"><span className="label">Parol</span><input className="input" required type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} /></label><button className="btn btn-primary w-full" disabled={loading}><LogIn size={17} />{loading ? "Kirilmoqda..." : "Kirish"}</button></div><p className="mt-5 text-center text-sm text-slate-400">{isAdminLogin ? <>Oddiy foydalanuvchimisiz? <Link className="font-black text-yellow-300 hover:underline" to="/login">Oddiy kirish</Link></> : <>Account yo‘qmi? <Link className="font-black text-yellow-300 hover:underline" to="/register">Ro‘yxatdan o‘tish</Link><span className="mx-2 text-slate-600">•</span><Link className="font-black text-slate-300 hover:text-yellow-300 hover:underline" to="/admin/login">Admin kirish</Link></>}</p></form></AuthShell>;
 }
 
 function AuthShell({ title, children }) {
