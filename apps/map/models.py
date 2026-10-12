@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 # Create your models here.
 class Location(models.Model):
     CATEGORY_CHOICES = [
@@ -20,3 +21,25 @@ class Location(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ServiceRating(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='service_rating',
+    )
+    score = models.PositiveSmallIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(score__gte=1, score__lte=5),
+                name='service_rating_score_1_to_5',
+            ),
+        ]
+
+    def __str__(self):
+        return f'{self.user}: {self.score}/5'

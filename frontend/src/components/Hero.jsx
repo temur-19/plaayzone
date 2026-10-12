@@ -1,6 +1,10 @@
 import { ArrowRight, Gamepad2, MapPin, MousePointer2, ShieldCheck, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getServiceRating } from "../api/serviceRating.js";
 import { useAuth } from "../context/AuthContext.jsx";
+import { getErrorMessage } from "../utils/errors.js";
+import RatingStars from "./RatingStars.jsx";
 
 const markers = [
   ["Stadion", "bg-emerald-400", "left-[18%] top-[28%]"],
@@ -11,6 +15,29 @@ const markers = [
 
 export default function Hero() {
   const { isAuthenticated } = useAuth();
+  const [serviceRating, setServiceRating] = useState({ average: null, count: 0 });
+  const [ratingError, setRatingError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    const updateRating = (event) => {
+      if (active) setServiceRating(event.detail);
+    };
+
+    getServiceRating()
+      .then((rating) => {
+        if (active) setServiceRating(rating);
+      })
+      .catch((error) => {
+        if (active) setRatingError(getErrorMessage(error, "Baholarni yuklab bo‘lmadi."));
+      });
+    window.addEventListener("playzone:service-rating-updated", updateRating);
+    return () => {
+      active = false;
+      window.removeEventListener("playzone:service-rating-updated", updateRating);
+    };
+  }, []);
+
   return (
     <section id="home" className="grid min-h-[calc(100vh-92px)] gap-10 py-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:py-16">
       <div>
@@ -23,6 +50,22 @@ export default function Hero() {
         </div>
         <div className="mt-10 grid gap-3 sm:grid-cols-4">
           {[["Joylar bazada", "100+"], ["Kategoriyalar", "4"], ["Foydalanuvchilar", "1K+"], ["24/7", "yangilanish"]].map(([label, value]) => <div className="glass rounded-3xl p-4" key={label}><p className="text-2xl font-black text-yellow-300">{value}</p><p className="mt-1 text-xs font-bold text-slate-400">{label}</p></div>)}
+        </div>
+        <div aria-live="polite" className="glass mt-4 flex flex-wrap items-center justify-between gap-3 rounded-3xl p-4">
+          <div>
+            <p className="text-sm font-black text-white">Foydalanuvchilar bahosi</p>
+            <p className="mt-1 text-xs text-slate-400">
+              {serviceRating.count
+                ? `${serviceRating.count} ta baho`
+                : ratingError || "Hozircha baho berilmagan"}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <RatingStars average={serviceRating.average} size={20} />
+            <span className="min-w-8 text-lg font-black text-yellow-300">
+              {serviceRating.average === null ? "—" : serviceRating.average.toFixed(1)}
+            </span>
+          </div>
         </div>
       </div>
       <div className="glass relative overflow-hidden rounded-[2rem] p-5">
