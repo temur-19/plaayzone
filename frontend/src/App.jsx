@@ -1,8 +1,9 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AdminRoute from "./components/AdminRoute.jsx";
 import Footer from "./components/Footer.jsx";
 import Navbar from "./components/Navbar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import SiteIntro from "./components/SiteIntro.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminLocationEdit from "./pages/AdminLocationEdit.jsx";
 import AdminLocationForm from "./pages/AdminLocationForm.jsx";
@@ -15,6 +16,7 @@ import Register from "./pages/Register.jsx";
 export default function App() {
   return (
     <div className="min-h-screen bg-[#020617] text-white">
+      <SiteIntro />
       <Routes>
         <Route path="/map" element={<ProtectedRoute><MapPage /></ProtectedRoute>} />
         <Route path="/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
@@ -30,10 +32,12 @@ export default function App() {
 }
 
 function PublicShell() {
+  const isHomePage = useLocation().pathname === "/";
+
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className={`mx-auto ${isHomePage ? "max-w-[1600px]" : "max-w-7xl"} px-4 py-6 sm:px-6 lg:px-10`}>
         <Routes>
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />

@@ -1,4 +1,5 @@
 import { Github, Instagram, Linkedin, Send } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const socialLinks = [
   { label: "Telegram", href: "https://t.me/temur_954", Icon: Send },
@@ -8,9 +9,11 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const isHome = useLocation().pathname === "/";
+
   return (
     <footer className="border-t border-white/10 bg-[#020617]">
-      <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+      <div className={`mx-auto flex ${isHome ? "max-w-[1600px]" : "max-w-7xl"} flex-col gap-5 px-4 py-8 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10`}>
         <div>
           <p className="font-black text-white">PlayZone.uz</p>
           <p className="mt-1">Yaqiningizdagi o‘yin va sport joylarini xaritada toping.</p>
@@ -19,7 +22,7 @@ export default function Footer() {
           {socialLinks.map(({ label, href, Icon }) => (
             <a
               aria-label={label}
-              className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 font-semibold text-slate-300 transition hover:border-yellow-300/40 hover:text-yellow-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-300"
+              className={`inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-base font-semibold text-slate-300 transition hover:border-yellow-300/40 hover:text-yellow-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-300 ${isHome ? "home-link" : ""}`}
               href={href}
               key={label}
               rel="noreferrer"

@@ -13,14 +13,14 @@ export default function Hero() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <section id="home" className="grid min-h-[calc(100vh-92px)] gap-10 py-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:py-16">
+    <section id="home" className="grid gap-6 py-6 sm:gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-12 lg:py-8">
       <div>
         <div className="inline-flex items-center gap-2 rounded-full border border-yellow-300/25 bg-yellow-300/10 px-4 py-2 text-sm font-black text-yellow-200"><Sparkles size={16} />PlayZone.uz</div>
         <h1 className="mt-6 max-w-4xl text-4xl font-black leading-tight text-white sm:text-6xl lg:text-7xl">Yaqiningdagi <span className="text-yellow-300">o‘yin joylarini</span> bir zumda toping</h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-400">PlayZone orqali mini stadion, billiard, PC club va PlayStation markazlarini xaritada tez toping.</p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link className="btn btn-primary" to={isAuthenticated ? "/map" : "/register"}>Bepul boshlash <ArrowRight size={17} /></Link>
-          <a className="btn btn-secondary" href="#how">Qanday ishlaydi</a>
+          <Link className="btn btn-primary home-link" to={isAuthenticated ? "/map" : "/register"}>Bepul boshlash <ArrowRight size={17} /></Link>
+          <a className="btn btn-secondary home-link" href="#how">Qanday ishlaydi</a>
         </div>
         <div className="mt-10 grid gap-3 sm:grid-cols-4">
           {[["Joylar bazada", "100+"], ["Kategoriyalar", "4"], ["Foydalanuvchilar", "1K+"], ["24/7", "yangilanish"]].map(([label, value]) => <div className="glass rounded-3xl p-4" key={label}><p className="text-2xl font-black text-yellow-300">{value}</p><p className="mt-1 text-xs font-bold text-slate-400">{label}</p></div>)}
