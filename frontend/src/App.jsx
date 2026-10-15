@@ -3,7 +3,6 @@ import AdminRoute from "./components/AdminRoute.jsx";
 import Footer from "./components/Footer.jsx";
 import Navbar from "./components/Navbar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import ServiceRatingPrompt from "./components/ServiceRatingPrompt.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminLocationEdit from "./pages/AdminLocationEdit.jsx";
 import AdminLocationForm from "./pages/AdminLocationForm.jsx";
@@ -26,7 +25,6 @@ export default function App() {
         <Route path="/admin/locations/:id/edit" element={<AdminRoute><AdminLocationEdit /></AdminRoute>} />
         <Route path="*" element={<PublicShell />} />
       </Routes>
-      <ServiceRatingPrompt />
     </div>
   );
 }
