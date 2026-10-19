@@ -1,4 +1,4 @@
-import { Filter, Gamepad2, LogOut, Search } from "lucide-react";
+import { Filter, Gamepad2, LogOut, MapPinPlus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { distanceInKm, getLocations, getMapConfig } from "../api/locationApi.js";
@@ -80,7 +80,7 @@ export default function MapPage() {
         <div className="pointer-events-auto mx-auto flex max-w-7xl items-center gap-3 rounded-[1.6rem] border border-white/10 bg-[#020617]/80 p-2 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
           <Link className="hidden items-center gap-2 pl-2 pr-3 sm:flex" to="/"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-yellow-300 text-slate-950"><Gamepad2 size={20} /></span><span className="font-black">PlayZone</span></Link>
           <SearchBar value={search} onChange={setSearch} />
-          <button className="btn btn-primary hidden px-4 sm:inline-flex"><Search size={16} />Qidirish</button>
+          <Link aria-label="Joylashuv qo‘shish" className="btn btn-primary px-3 sm:px-4" to="/locations/add"><MapPinPlus size={16} /><span className="hidden sm:inline">Joy qo‘shish</span></Link>
           <button className="btn btn-secondary px-4" onClick={() => setPanelOpen((value) => !value)} type="button"><Filter size={16} /><span className="hidden sm:inline">Filter</span></button>
           <button className="btn btn-secondary hidden px-4 sm:inline-flex" disabled={!userPosition} type="button">Eng yaqin</button>
           <button className="btn btn-secondary px-4" onClick={logout} type="button"><LogOut size={16} /></button>

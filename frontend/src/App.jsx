@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import AdminLocationEdit from "./pages/AdminLocationEdit.jsx";
 import AdminLocationForm from "./pages/AdminLocationForm.jsx";
 import AdminLocations from "./pages/AdminLocations.jsx";
+import AddLocation from "./pages/AddLocation.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import MapPage from "./pages/MapPage.jsx";
@@ -43,6 +44,7 @@ function PublicShell() {
           <Route path="login" element={<Login />} />
           <Route path="admin/login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="locations/add" element={<ProtectedRoute><AddLocation /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

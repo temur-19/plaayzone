@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from config.settings import AUTH_USER_MODEL
 # Create your models here.
 class Location(models.Model):
     CATEGORY_CHOICES = [
@@ -8,6 +9,7 @@ class Location(models.Model):
         ('pc_club', 'Kompyuter klub'),
         ('billiard', 'Billiard'),
     ]
+    owner = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_DEFAULT,default = None, null=True, blank=True, related_name='locations')
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='stadium')
     name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=9, null=False, default = '998')

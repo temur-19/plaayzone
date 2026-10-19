@@ -1,6 +1,7 @@
 import { LocateFixed, Navigation } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { categoryMeta, getLocationImageUrl } from "../api/locationApi.js";
+import { loadYandexMaps } from "../utils/yandexMaps.js";
 
 const DEFAULT_CENTER = [41.3111, 69.2797];
 const CATEGORY_COLORS = {
@@ -230,13 +231,6 @@ function getIconByCategory(category) {
     billiard: `${ICON_BASE_URL}/billiard.png`,
   };
   return icons[category] || `${ICON_BASE_URL}/playstation.png`;
-}
-
-function loadYandexMaps(apiKey) {
-  if (window.ymaps) return Promise.resolve();
-  const existing = document.querySelector("script[data-yandex-maps]");
-  if (existing) return new Promise((resolve, reject) => { existing.addEventListener("load", resolve, { once: true }); existing.addEventListener("error", reject, { once: true }); });
-  return new Promise((resolve, reject) => { const script = document.createElement("script"); script.src = `https://api-maps.yandex.ru/2.1/?apikey=${apiKey}&lang=uz_UZ`; script.async = true; script.dataset.yandexMaps = "true"; script.onload = resolve; script.onerror = reject; document.head.appendChild(script); });
 }
 
 function escapeHtml(value) {

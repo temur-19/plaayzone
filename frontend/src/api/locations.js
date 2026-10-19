@@ -20,7 +20,7 @@ export async function fetchAdminLocations() {
 }
 
 export async function createLocation(payload) {
-  const { data } = await api.post("/management/api/locations/create/", toLocationFormData(payload), {
+  const { data } = await api.post("/api/locations/create/user/", toLocationFormData(payload), {
     headers: { "Content-Type": "multipart/form-data" },
   });
   return data;

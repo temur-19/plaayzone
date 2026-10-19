@@ -22,8 +22,6 @@ export async function getLocations(category = "all") {
 }
 
 export async function getMapConfig() {
-  const envKey = import.meta.env.VITE_YANDEX_MAPS_API_KEY;
-  if (envKey) return { api_key: envKey };
   const { data } = await api.get("/head/config/");
   return data;
 }

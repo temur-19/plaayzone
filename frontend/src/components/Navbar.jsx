@@ -30,6 +30,7 @@ export default function Navbar() {
           <a className={`rounded-2xl px-4 py-2 text-base font-black text-slate-300 hover:text-yellow-200 ${homeLinkClass}`} href="/#categories">Kategoriyalar</a>
           <a className={`rounded-2xl px-4 py-2 text-base font-black text-slate-300 hover:text-yellow-200 ${homeLinkClass}`} href="/#about">Biz haqimizda</a>
           {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/map">Xarita</NavLink>}
+          {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/locations/add">Joy qo‘shish</NavLink>}
           {isAdmin && <NavLink className={`${navClass} ${homeLinkClass}`} to="/management/admin">Admin</NavLink>}
         </nav>
         <div className="hidden items-center gap-3 lg:flex">
@@ -45,6 +46,7 @@ export default function Navbar() {
             <a className={`rounded-2xl px-4 py-2 text-base font-black text-slate-300 ${homeLinkClass}`} href="/#categories">Kategoriyalar</a>
             <a className={`rounded-2xl px-4 py-2 text-base font-black text-slate-300 ${homeLinkClass}`} href="/#about">Biz haqimizda</a>
             {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/map">Xarita</NavLink>}
+            {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/locations/add">Joy qo‘shish</NavLink>}
             {isAdmin && <NavLink className={`${navClass} ${homeLinkClass}`} to="/management/admin">Admin</NavLink>}
             {isAuthenticated ? <button className="btn btn-secondary" onClick={logout} type="button"><LogOut size={16} />Chiqish</button> : <Link className={`btn btn-primary ${homeLinkClass}`} to="/login">Kirish</Link>}
           </nav>
