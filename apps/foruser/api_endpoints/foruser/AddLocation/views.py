@@ -6,3 +6,5 @@ from apps.map.models import Location
 class AddLocationView(CreateAPIView):
     queryset = Location.objects.all()
     serializer_class = AddLocationSerializer
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
