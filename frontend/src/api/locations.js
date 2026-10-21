@@ -39,6 +39,22 @@ export async function deleteLocation(id) {
   await api.delete(`/management/api/locations/${id}/delete/`);
 }
 
+export async function fetchMyLocations() {
+  const { data } = await api.get("/get/my/locations/");
+  return data;
+}
+
+export async function updateMyLocation(id, payload) {
+  const { data } = await api.patch(`/my/locations/${id}/`, toLocationFormData(payload), {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data;
+}
+
+export async function deleteMyLocation(id) {
+  await api.delete(`/my/locations/${id}/`);
+}
+
 function toLocationFormData(payload) {
   const formData = new FormData();
   Object.entries(payload).forEach(([key, value]) => {

@@ -12,6 +12,8 @@ import AddLocation from "./pages/AddLocation.jsx";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import MapPage from "./pages/MapPage.jsx";
+import MyLocationEdit from "./pages/MyLocationEdit.jsx";
+import MyLocations from "./pages/MyLocations.jsx";
 import Register from "./pages/Register.jsx";
 
 export default function App() {
@@ -45,6 +47,8 @@ function PublicShell() {
           <Route path="admin/login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="locations/add" element={<ProtectedRoute><AddLocation /></ProtectedRoute>} />
+          <Route path="my-locations" element={<ProtectedRoute><MyLocations /></ProtectedRoute>} />
+          <Route path="my-locations/:id/edit" element={<ProtectedRoute><MyLocationEdit /></ProtectedRoute>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
