@@ -16,17 +16,17 @@ export default function Hero() {
     <section id="home" className="grid gap-6 py-6 sm:gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-12 lg:py-8">
       <div>
         <div className="inline-flex items-center gap-2 rounded-full border border-yellow-300/25 bg-yellow-300/10 px-4 py-2 text-sm font-black text-yellow-200"><Sparkles size={16} />PlayZone.uz</div>
-        <h1 className="mt-6 max-w-4xl text-4xl font-black leading-tight text-white sm:text-6xl lg:text-7xl">Yaqiningdagi <span className="text-yellow-300">o‘yin joylarini</span> bir zumda toping</h1>
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-400">PlayZone orqali mini stadion, billiard, PC club va PlayStation markazlarini xaritada tez toping.</p>
+        <h1 className="mt-6 max-w-4xl text-[clamp(2rem,9vw,3rem)] font-black leading-tight text-white sm:text-6xl lg:text-7xl">Yaqiningdagi <span className="text-yellow-300">o‘yin joylarini</span> bir zumda toping</h1>
+        <p className="mt-5 max-w-2xl text-base leading-7 text-slate-400 sm:mt-6 sm:text-lg sm:leading-8">PlayZone orqali mini stadion, billiard, PC club va PlayStation markazlarini xaritada tez toping.</p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link className="btn btn-primary home-link" to={isAuthenticated ? "/map" : "/register"}>Bepul boshlash <ArrowRight size={17} /></Link>
           <a className="btn btn-secondary home-link" href="#how">Qanday ishlaydi</a>
         </div>
-        <div className="mt-10 grid gap-3 sm:grid-cols-4">
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:grid-cols-4">
           {[["Joylar bazada", "100+"], ["Kategoriyalar", "4"], ["Foydalanuvchilar", "1K+"], ["24/7", "yangilanish"]].map(([label, value]) => <div className="glass rounded-3xl p-4" key={label}><p className="text-2xl font-black text-yellow-300">{value}</p><p className="mt-1 text-xs font-bold text-slate-400">{label}</p></div>)}
         </div>
       </div>
-      <div className="glass relative overflow-hidden rounded-[2rem] p-5">
+      <div className="glass relative overflow-hidden rounded-[1.5rem] p-3 sm:rounded-[2rem] sm:p-5">
         <div className="mb-4 flex items-center justify-between"><div className="flex items-center gap-2 text-sm font-black text-white"><Gamepad2 className="text-yellow-300" size={18} />Jonli xarita ko‘rinishi</div><span className="yellow-pill">JONLI</span></div>
         <div className="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#050b18]">
           <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(rgba(255,255,255,.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.08)_1px,transparent_1px)] [background-size:42px_42px]" />

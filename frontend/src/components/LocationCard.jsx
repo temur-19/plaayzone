@@ -7,7 +7,7 @@ export default function LocationCard({ location, distance, selected, onClick }) 
   const price = location.price ? `${Number(location.price).toLocaleString("uz-UZ")} so‘m` : "Narx yo‘q";
 
   return (
-    <button className={`w-full overflow-hidden rounded-3xl border bg-[#111827]/85 text-left shadow-lg transition hover:-translate-y-1 ${selected ? "border-yellow-300 shadow-[0_0_32px_rgba(250,204,21,0.22)]" : "border-white/10 hover:border-yellow-300/50"}`} onClick={() => onClick(location)} type="button">
+    <button className={`w-full shrink-0 overflow-hidden rounded-3xl border bg-[#111827]/85 text-left shadow-lg transition hover:-translate-y-1 ${selected ? "border-yellow-300 shadow-[0_0_32px_rgba(250,204,21,0.22)]" : "border-white/10 hover:border-yellow-300/50"}`} onClick={() => onClick(location)} type="button">
       <div className="flex gap-3 p-3">
         <div className="h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#020617]">{image ? <img className="h-full w-full object-cover" src={image} alt={location.name} /> : <div className="grid h-full place-items-center"><MapPin className="text-yellow-300" size={24} /></div>}</div>
         <div className="min-w-0 flex-1">

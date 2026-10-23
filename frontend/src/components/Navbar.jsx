@@ -37,11 +37,19 @@ export default function Navbar() {
         <div className="hidden items-center gap-3 lg:flex">
           {isAuthenticated ? <button className="btn btn-secondary" onClick={logout} type="button"><LogOut size={16} />Chiqish</button> : <><Link className={`btn btn-secondary ${homeLinkClass}`} to="/login">Kirish</Link><Link className={`btn btn-primary ${homeLinkClass}`} to="/register">Ro‘yxatdan o‘tish</Link></>}
         </div>
-        <button className="btn btn-secondary px-3 lg:hidden" onClick={() => setOpen((value) => !value)} type="button">{open ? <X size={18} /> : <Menu size={18} />}</button>
+        <button
+          aria-expanded={open}
+          aria-label={open ? "Menyuni yopish" : "Menyuni ochish"}
+          className="btn btn-secondary h-11 w-11 shrink-0 px-0 lg:hidden"
+          onClick={() => setOpen((value) => !value)}
+          type="button"
+        >
+          {open ? <X size={18} /> : <Menu size={18} />}
+        </button>
       </div>
       {open && (
         <div className="border-t border-white/10 bg-[#050b18] px-4 py-4 lg:hidden" onClick={() => setOpen(false)}>
-          <nav className="flex flex-col gap-2">
+          <nav aria-label="Mobil navigatsiya" className="flex flex-col gap-2">
             <a className={`rounded-2xl px-4 py-2 text-base font-black text-slate-300 ${homeLinkClass}`} href="/#home">Bosh sahifa</a>
             <a className={`rounded-2xl px-4 py-2 text-base font-black text-slate-300 ${homeLinkClass}`} href="/#how">Qanday ishlaydi</a>
             <a className={`rounded-2xl px-4 py-2 text-base font-black text-slate-300 ${homeLinkClass}`} href="/#categories">Kategoriyalar</a>

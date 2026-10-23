@@ -1,4 +1,4 @@
-import api from "./api.js";
+import api, { API_BASE_URL } from "./api.js";
 
 export const categories = [
   { value: "all", label: "Hammasi" },
@@ -29,7 +29,7 @@ export async function getMapConfig() {
 export function getLocationImageUrl(location) {
   if (!location?.image) return "";
   if (location.image.startsWith("http")) return location.image;
-  return `${import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000"}${location.image}`;
+  return `${API_BASE_URL}${location.image}`;
 }
 
 export function distanceInKm(from, location) {

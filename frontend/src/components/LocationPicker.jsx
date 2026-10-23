@@ -13,6 +13,8 @@ export default function LocationPicker({ apiKey, value, onChange }) {
   const valueRef = useRef(value);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
+  const [locationError, setLocationError] = useState("");
+  const [locating, setLocating] = useState(false);
 
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -26,9 +28,14 @@ export default function LocationPicker({ apiKey, value, onChange }) {
     loadYandexMaps(apiKey)
       .then(() => window.ymaps.ready(() => {
         if (!active || !mapNode.current || mapRef.current) return;
+        const hasCoordinates = valueRef.current.lat !== "" && valueRef.current.lon !== "";
         const lat = Number(valueRef.current.lat);
         const lon = Number(valueRef.current.lon);
-        const hasLocation = Number.isFinite(lat) && Number.isFinite(lon);
+        const hasLocation = hasCoordinates
+          && Number.isFinite(lat)
+          && Number.isFinite(lon)
+          && Math.abs(lat) <= 90
+          && Math.abs(lon) <= 180;
         const map = new window.ymaps.Map(mapNode.current, {
           center: hasLocation ? [lat, lon] : DEFAULT_CENTER,
           zoom: hasLocation ? 15 : 12,
@@ -71,6 +78,26 @@ export default function LocationPicker({ apiKey, value, onChange }) {
             onChangeRef.current({ lat: markerCoords[0].toFixed(6), lon: markerCoords[1].toFixed(6) });
           });
           map.geoObjects.add(markerRef.current);
+        } else if (navigator.geolocation) {
+          setLocating(true);
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              if (!active) return;
+              setLocating(false);
+              if (markerRef.current) return;
+              const coords = [position.coords.latitude, position.coords.longitude];
+              map.setCenter(coords, 15);
+              placeMarker(coords);
+            },
+            () => {
+              if (!active) return;
+              setLocating(false);
+              setLocationError("Joylashuvni aniqlab bo‘lmadi. Xaritadan qo‘lda joy tanlang.");
+            },
+            { enableHighAccuracy: true, maximumAge: 30000, timeout: 12000 },
+          );
+        } else {
+          setLocationError("Brauzeringiz joylashuvni aniqlashni qo‘llab-quvvatlamaydi. Xaritadan qo‘lda joy tanlang.");
         }
         setReady(true);
       }))
@@ -116,7 +143,11 @@ export default function LocationPicker({ apiKey, value, onChange }) {
       </div>
       <div className={`flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-bold ${hasLocation ? "border-emerald-400/20 bg-emerald-400/5 text-emerald-200" : "border-yellow-300/20 bg-yellow-300/5 text-yellow-100"}`}>
         <MapPin size={18} />
-        {hasLocation ? `Tanlandi: ${value.lat}, ${value.lon}` : "Joylashuvni xaritadan tanlang"}
+        {hasLocation
+          ? "Joylashuv tanlandi."
+          : locating
+            ? "Joriy joylashuvingiz aniqlanmoqda..."
+            : locationError || "Joylashuvni xaritadan tanlang"}
       </div>
     </section>
   );

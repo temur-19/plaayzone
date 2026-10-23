@@ -1,10 +1,14 @@
 
 from pathlib import Path
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 import os
 
 load_dotenv()
 YANDEX_MAPS_API_KEY = os.getenv('YANDEX_MAPS_API_KEY')
+
+def clean_tunnel_url(value):
+    return value.split("->", 1)[0].strip().rstrip("/") if value else ""
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,7 +22,16 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ['choking-ploy-boneless.ngrok-free.dev', 'localhost', '127.0.0.1']
+NGROK_FRONTEND_URL = clean_tunnel_url(os.getenv("NGROK_FRONTEND_URL", ""))
+NGROK_API_URL = clean_tunnel_url(os.getenv("NGROK_API_URL", ""))
+NGROK_API_HOST = urlparse(NGROK_API_URL).hostname if NGROK_API_URL else None
+ALLOWED_HOSTS = [
+    "choking-ploy-boneless.ngrok-free.dev",
+    "localhost",
+    "127.0.0.1",
+]
+if NGROK_API_HOST:
+    ALLOWED_HOSTS.append(NGROK_API_HOST)
 
 
 # Application definition
@@ -57,6 +70,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:5500",
 ]
+if NGROK_FRONTEND_URL:
+    CORS_ALLOWED_ORIGINS.append(NGROK_FRONTEND_URL)
 
 ROOT_URLCONF = 'config.urls'
 
@@ -144,6 +159,9 @@ AUTH_USER_MODEL = 'foruser.CustomUser'
 CSRF_TRUSTED_ORIGINS = [
     'https://choking-ploy-boneless.ngrok-free.dev',
 ]
+CSRF_TRUSTED_ORIGINS.extend(
+    origin for origin in (NGROK_FRONTEND_URL, NGROK_API_URL) if origin
+)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

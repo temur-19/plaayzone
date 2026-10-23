@@ -78,16 +78,18 @@ export default function LocationsList() {
                   <h2 className="mt-1 text-xl font-black text-ink">{location.name}</h2>
                 </div>
                 <p className="line-clamp-3 min-h-12 text-sm leading-6 text-slate-600">{location.description || "No description provided."}</p>
-                <dl className="grid grid-cols-2 gap-3 rounded-md bg-slate-50 p-3 text-sm">
-                  <div>
-                    <dt className="font-semibold text-slate-500">Lat</dt>
-                    <dd className="font-bold text-ink">{location.lat}</dd>
-                  </div>
-                  <div>
-                    <dt className="font-semibold text-slate-500">Lon</dt>
-                    <dd className="font-bold text-ink">{location.lon}</dd>
-                  </div>
-                </dl>
+                {isAdmin && (
+                  <dl className="grid grid-cols-2 gap-3 rounded-md bg-slate-50 p-3 text-sm">
+                    <div>
+                      <dt className="font-semibold text-slate-500">Lat</dt>
+                      <dd className="font-bold text-ink">{location.lat}</dd>
+                    </div>
+                    <div>
+                      <dt className="font-semibold text-slate-500">Lon</dt>
+                      <dd className="font-bold text-ink">{location.lon}</dd>
+                    </div>
+                  </dl>
+                )}
                 {isAdmin && (
                   <div className="flex gap-2 pt-2">
                     <Link className="btn btn-secondary flex-1" to={`/locations/${location.id}/edit`}>

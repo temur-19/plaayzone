@@ -90,29 +90,12 @@ export default function LocationForm({ apiKey, initialValues, submitLabel = "Joy
               setForm((current) => ({ ...current, lat, lon }));
             }}
           />
-          <div className="grid gap-5 sm:grid-cols-2">
-            <label className="space-y-2">
-              <span className="label">Kenglik</span>
-              <input className="input" readOnly value={form.lat} />
-            </label>
-            <label className="space-y-2">
-              <span className="label">Uzunlik</span>
-              <input className="input" readOnly value={form.lon} />
-            </label>
-          </div>
           {locationError && <p className="text-sm font-bold text-red-200" role="alert">{locationError}</p>}
         </>
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2">
-          <label className="space-y-2">
-            <span className="label">Kenglik</span>
-            <input className="input" name="lat" required type="number" step="any" value={form.lat} onChange={updateField} />
-          </label>
-          <label className="space-y-2">
-            <span className="label">Uzunlik</span>
-            <input className="input" name="lon" required type="number" step="any" value={form.lon} onChange={updateField} />
-          </label>
-        </div>
+        <p className="rounded-2xl border border-yellow-300/20 bg-yellow-300/5 px-4 py-3 text-sm font-semibold text-yellow-100" role="status">
+          Xarita sozlamasi mavjud emas. Joylashuv xaritasi yuklangach, joyni xaritadan tanlashingiz mumkin.
+        </p>
       )}
       <label className="block space-y-2">
         <span className="label">Tavsif</span>
