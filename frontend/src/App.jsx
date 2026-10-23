@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AdminRoute from "./components/AdminRoute.jsx";
 import Footer from "./components/Footer.jsx";
+import MobileBottomNav from "./components/MobileBottomNav.jsx";
 import Navbar from "./components/Navbar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import SiteIntro from "./components/SiteIntro.jsx";
@@ -53,6 +54,7 @@ function PublicShell() {
         </Routes>
       </main>
       <Footer />
+      <MobileBottomNav />
     </>
   );
 }
