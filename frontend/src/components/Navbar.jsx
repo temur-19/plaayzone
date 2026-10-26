@@ -32,7 +32,7 @@ export default function Navbar() {
           {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/map">Xarita</NavLink>}
           {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/locations/add">Joy qo‘shish</NavLink>}
           {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/my-locations">Mening xizmatlarim</NavLink>}
-          {isAdmin && <NavLink className={`${navClass} ${homeLinkClass}`} to="/management/admin">Admin</NavLink>}
+          {isAdmin && <NavLink className={`${navClass} ${homeLinkClass}`} to="/admin">Admin</NavLink>}
         </nav>
         <div className="hidden items-center gap-3 lg:flex">
           {isAuthenticated ? <button className="btn btn-secondary" onClick={logout} type="button"><LogOut size={16} />Chiqish</button> : <><Link className={`btn btn-secondary ${homeLinkClass}`} to="/login">Kirish</Link><Link className={`btn btn-primary ${homeLinkClass}`} to="/register">Ro‘yxatdan o‘tish</Link></>}
@@ -57,7 +57,7 @@ export default function Navbar() {
             {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/map">Xarita</NavLink>}
             {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/locations/add">Joy qo‘shish</NavLink>}
             {isAuthenticated && <NavLink className={`${navClass} ${homeLinkClass}`} to="/my-locations">Mening xizmatlarim</NavLink>}
-            {isAdmin && <NavLink className={`${navClass} ${homeLinkClass}`} to="/management/admin">Admin</NavLink>}
+            {isAdmin && <NavLink className={`${navClass} ${homeLinkClass}`} to="/admin">Admin</NavLink>}
             {isAuthenticated ? <button className="btn btn-secondary" onClick={logout} type="button"><LogOut size={16} />Chiqish</button> : <Link className={`btn btn-primary ${homeLinkClass}`} to="/login">Kirish</Link>}
           </nav>
         </div>

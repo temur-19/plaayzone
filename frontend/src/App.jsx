@@ -23,9 +23,9 @@ export default function App() {
       <SiteIntro />
       <Routes>
         <Route path="/map" element={<ProtectedRoute><MapPage /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
         <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-        <Route path="/management/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/management/admin" element={<Navigate to="/admin" replace />} />
         <Route path="/admin/locations" element={<AdminRoute><AdminLocations /></AdminRoute>} />
         <Route path="/admin/locations/new" element={<AdminRoute><AdminLocationForm /></AdminRoute>} />
         <Route path="/admin/locations/:id/edit" element={<AdminRoute><AdminLocationEdit /></AdminRoute>} />

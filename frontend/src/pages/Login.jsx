@@ -20,8 +20,8 @@ export default function Login() {
     try {
       const auth = await signIn({ ...form, adminMode: isAdminLogin });
       const destination = isAdminLogin
-        ? "/management/admin"
-        : (location.state?.from?.pathname || (auth.isAdmin ? "/management/admin" : "/map"));
+        ? "/admin"
+        : (location.state?.from?.pathname || (auth.isAdmin ? "/admin" : "/map"));
       navigate(destination, { replace: true });
     } catch (err) {
       setError(getErrorMessage(err, "Login yoki parol xato."));
