@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const AUTH_KEY = "playzone.auth";
+let refreshPromise = null;
 
 const configuredApiUrl = import.meta.env.VITE_API_BASE_URL?.split("->", 1)[0].trim().replace(/\/+$/, "");
 export const API_BASE_URL = configuredApiUrl
@@ -43,21 +44,20 @@ api.interceptors.response.use(
     const original = error.config;
     const auth = getStoredAuth();
 
-    if (error.response?.status === 401 && auth?.refresh && !original?._retry) {
+    if (error.response?.status === 401 && auth?.refresh && !original?._retry && !original?.url?.includes("/token/refresh/")) {
       original._retry = true;
       try {
-        const { data } = await axios.post(`${API_BASE_URL}/token/refresh/`, {
+        refreshPromise ??= axios.post(`${API_BASE_URL}/token/refresh/`, {
           refresh: auth.refresh,
-        });
+        }).finally(() => { refreshPromise = null; });
+        const { data } = await refreshPromise;
         const nextAuth = { ...auth, access: data.access, refresh: data.refresh || auth.refresh };
         setStoredAuth(nextAuth);
         original.headers.Authorization = `Bearer ${nextAuth.access}`;
         return api(original);
       } catch (refreshError) {
         clearStoredAuth();
-        if (!window.location.pathname.startsWith("/login")) {
-          window.location.assign("/login");
-        }
+        window.dispatchEvent(new Event("auth:expired"));
         return Promise.reject(refreshError);
       }
     }

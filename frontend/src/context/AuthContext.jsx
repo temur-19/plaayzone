@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { login, logout } from "../api/authApi.js";
 import { getStoredAuth } from "../api/api.js";
 
@@ -6,6 +6,12 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [auth, setAuth] = useState(() => getStoredAuth());
+
+  useEffect(() => {
+    const expireAuth = () => setAuth(null);
+    window.addEventListener("auth:expired", expireAuth);
+    return () => window.removeEventListener("auth:expired", expireAuth);
+  }, []);
 
   const signIn = async (payload) => {
     const nextAuth = await login(payload, payload.adminMode);
