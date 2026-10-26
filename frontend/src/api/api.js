@@ -4,8 +4,7 @@ const AUTH_KEY = "playzone.auth";
 let refreshPromise = null;
 
 const configuredApiUrl = import.meta.env.VITE_API_BASE_URL?.split("->", 1)[0].trim().replace(/\/+$/, "");
-export const API_BASE_URL = configuredApiUrl
-  ?? (import.meta.env.DEV ? "" : "http://127.0.0.1:8000");
+export const API_BASE_URL = configuredApiUrl ?? "";
 
 export function getStoredAuth() {
   try {
