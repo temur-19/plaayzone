@@ -11,6 +11,8 @@ import SearchBar from "../components/SearchBar.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { getErrorMessage } from "../utils/errors.js";
 
+const EMPTY = [];
+
 export default function MapPage() {
   const navigate = useNavigate();
   const { signOut } = useAuth();
@@ -102,7 +104,7 @@ export default function MapPage() {
 
   return (
     <div className="relative h-dvh overflow-hidden bg-[#020617] text-white">
-      <MapView apiKey={apiKey} distances={distances} locateVersion={locateVersion} locationError={locationError} locations={routeTarget ? [] : visibleLocations} onClearRoute={() => setRouteTarget(null)} onDetails={setModalLocation} onLocateMe={locateMe} onSelect={setSelected} routeTarget={routeTarget} selectedLocation={selected} userPosition={userPosition} />
+      <MapView apiKey={apiKey} distances={distances} locateVersion={locateVersion} locationError={locationError} locations={routeTarget ? EMPTY : visibleLocations} onClearRoute={() => setRouteTarget(null)} onDetails={setModalLocation} onLocateMe={locateMe} onSelect={setSelected} routeTarget={routeTarget} selectedLocation={selected} userPosition={userPosition} />
 
       <header className="pointer-events-none absolute left-0 right-0 top-0 z-20 p-2 sm:p-4 lg:p-6">
         <div className="pointer-events-auto mx-auto flex max-w-7xl items-center gap-1.5 rounded-2xl border border-white/10 bg-[#020617]/90 p-1.5 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:gap-3 sm:rounded-[1.6rem] sm:p-2">
@@ -115,6 +117,8 @@ export default function MapPage() {
       </header>
 
       {error && <div className="absolute left-4 right-4 top-24 z-30 rounded-2xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-200 backdrop-blur-xl lg:left-6 lg:right-auto">{error}</div>}
+
+      {!category && !routeTarget && <div className="pointer-events-none absolute left-1/2 top-24 z-20 -translate-x-1/2 rounded-full border border-white/10 bg-[#020617]/90 px-4 py-2 text-center text-xs font-bold text-slate-200 shadow-lg backdrop-blur-xl sm:top-28">Joylarni ko‘rish uchun pastdan kategoriya tanlang</div>}
 
       <div className="map-category-filter absolute bottom-4 left-3 right-3 z-20 rounded-2xl border border-white/45 bg-white/85 shadow-[0_18px_50px_rgba(15,23,42,0.18)] backdrop-blur-xl lg:left-1/2 lg:right-auto lg:w-auto lg:-translate-x-1/2"><CategoryFilter compact value={category} onChange={setCategory} /></div>
 

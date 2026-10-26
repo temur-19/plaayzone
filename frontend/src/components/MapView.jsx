@@ -45,6 +45,17 @@ export default function MapView({ apiKey, locations, userPosition, selectedLocat
     mapRef.current.geoObjects.add(locationCollectionRef.current);
   }, [ready]);
 
+  useEffect(() => () => {
+    mapRef.current?.destroy();
+    mapRef.current = null;
+    locationCollectionRef.current = null;
+    locationMarkersRef.current = [];
+    markerLayoutsRef.current = null;
+    userMarkerRef.current = null;
+    accuracyCircleRef.current = null;
+    routeRef.current = null;
+  }, []);
+
   useEffect(() => {
     if (!ready || !locationCollectionRef.current) return;
 
