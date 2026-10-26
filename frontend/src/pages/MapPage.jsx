@@ -88,6 +88,12 @@ export default function MapPage() {
   }, [category, distances, locations, search, userPosition]);
 
   const logout = async () => { await signOut(); navigate("/"); };
+  const selectNearest = () => {
+    const nearest = visibleLocations[0];
+    if (!nearest) return;
+    setSelected(nearest);
+    setModalLocation(nearest);
+  };
   const locateMe = async () => {
     const position = await requestLocation();
     if (position) setLocateVersion((version) => version + 1);
@@ -103,7 +109,7 @@ export default function MapPage() {
           <Link className="hidden items-center gap-2 pl-2 pr-3 sm:flex" to="/"><span className="grid h-10 w-10 place-items-center rounded-2xl bg-yellow-300 text-slate-950"><Gamepad2 size={20} /></span><span className="font-black">PlayZone</span></Link>
           <SearchBar value={search} onChange={setSearch} />
           <Link aria-label="Joylashuv qo‘shish" className="btn btn-primary hidden px-3 sm:inline-flex sm:px-4" to="/locations/add"><MapPinPlus size={16} /><span>Joy qo‘shish</span></Link>
-          <button className="btn btn-secondary hidden px-4 sm:inline-flex" disabled={!userPosition} type="button">Eng yaqin</button>
+          <button className="btn btn-secondary hidden px-4 sm:inline-flex" disabled={!userPosition || !visibleLocations.length} onClick={selectNearest} type="button">Eng yaqin</button>
           <button aria-label="Chiqish" className="btn btn-secondary h-11 w-11 shrink-0 px-0 sm:w-auto sm:px-4" onClick={logout} type="button"><LogOut size={16} /><span className="hidden sm:inline">Chiqish</span></button>
         </div>
       </header>
