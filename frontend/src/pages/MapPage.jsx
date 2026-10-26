@@ -54,8 +54,7 @@ export default function MapPage() {
   });
 
   useEffect(() => {
-    requestLocation()
-      .then(() => Promise.all([getMapConfig(), getLocations()]))
+    Promise.all([getMapConfig(), getLocations()])
       .then(([config, items]) => { setApiKey(config.api_key || ""); setLocations(items); })
       .catch((err) => setError(getErrorMessage(err, "Xarita ma’lumotlari yuklanmadi.")))
       .finally(() => setLoading(false));
