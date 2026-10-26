@@ -57,8 +57,9 @@ export async function deleteMyLocation(id) {
 
 function toLocationFormData(payload) {
   const formData = new FormData();
-  Object.entries(payload).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
+  ["name", "category", "phone_number", "price", "lat", "lon", "description", "image"].forEach((key) => {
+    const value = payload[key];
+    if (value !== undefined && value !== null) {
       formData.append(key, value);
     }
   });
