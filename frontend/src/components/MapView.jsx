@@ -19,6 +19,7 @@ export default function MapView({ apiKey, locations, userPosition, selectedLocat
   const routeRef = useRef(null);
   const routeDestinationIdRef = useRef(null);
   const processedLocateVersionRef = useRef(0);
+  const hasCenteredOnUserRef = useRef(false);
   const fittedKeyRef = useRef("");
   const selectedMarkerIdRef = useRef(null);
   const [ready, setReady] = useState(false);
@@ -150,32 +151,48 @@ export default function MapView({ apiKey, locations, userPosition, selectedLocat
   useEffect(() => {
     if (!ready || !mapRef.current || !markerLayoutsRef.current) return;
 
-    if (userMarkerRef.current) mapRef.current.geoObjects.remove(userMarkerRef.current);
-    if (accuracyCircleRef.current) mapRef.current.geoObjects.remove(accuracyCircleRef.current);
-    userMarkerRef.current = null;
-    accuracyCircleRef.current = null;
-
-    if (!userPosition) return;
+    if (!userPosition) {
+      if (userMarkerRef.current) mapRef.current.geoObjects.remove(userMarkerRef.current);
+      if (accuracyCircleRef.current) mapRef.current.geoObjects.remove(accuracyCircleRef.current);
+      userMarkerRef.current = null;
+      accuracyCircleRef.current = null;
+      return;
+    }
 
     const coords = [userPosition.lat, userPosition.lon];
     if (Number.isFinite(userPosition.accuracy) && userPosition.accuracy > 0) {
       const accuracyRadius = Math.min(Math.max(userPosition.accuracy, 25), MAX_ACCURACY_RADIUS);
-      accuracyCircleRef.current = new window.ymaps.Circle([coords, accuracyRadius], {}, {
-        fillColor: "#0ea5e914",
-        strokeColor: "#0284c7",
-        strokeOpacity: 0.22,
-        strokeWidth: 1,
-      });
-      mapRef.current.geoObjects.add(accuracyCircleRef.current);
+      if (accuracyCircleRef.current) {
+        accuracyCircleRef.current.geometry.setCoordinates(coords);
+        accuracyCircleRef.current.geometry.setRadius(accuracyRadius);
+      } else {
+        accuracyCircleRef.current = new window.ymaps.Circle([coords, accuracyRadius], {}, {
+          fillColor: "#0ea5e914",
+          strokeColor: "#0284c7",
+          strokeOpacity: 0.22,
+          strokeWidth: 1,
+        });
+        mapRef.current.geoObjects.add(accuracyCircleRef.current);
+      }
+    } else if (accuracyCircleRef.current) {
+      mapRef.current.geoObjects.remove(accuracyCircleRef.current);
+      accuracyCircleRef.current = null;
     }
 
-    userMarkerRef.current = new window.ymaps.Placemark(coords, { hintContent: "Mening joylashuvim" }, {
-      iconLayout: markerLayoutsRef.current.user,
-      iconShape: { type: "Circle", coordinates: [0, 0], radius: 28 },
-      zIndex: 900,
-    });
-    mapRef.current.geoObjects.add(userMarkerRef.current);
-    if (!routeTarget) mapRef.current.setCenter(coords, 15, { duration: 450 });
+    if (userMarkerRef.current) {
+      userMarkerRef.current.geometry.setCoordinates(coords);
+    } else {
+      userMarkerRef.current = new window.ymaps.Placemark(coords, { hintContent: "Mening joylashuvim" }, {
+        iconLayout: markerLayoutsRef.current.user,
+        iconShape: { type: "Circle", coordinates: [0, 0], radius: 28 },
+        zIndex: 900,
+      });
+      mapRef.current.geoObjects.add(userMarkerRef.current);
+    }
+    if (!hasCenteredOnUserRef.current && !routeTarget) {
+      hasCenteredOnUserRef.current = true;
+      mapRef.current.setCenter(coords, 15, { duration: 450 });
+    }
   }, [ready, routeTarget, userPosition]);
 
   useEffect(() => {
