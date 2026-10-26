@@ -20,8 +20,13 @@ export function AuthProvider({ children }) {
   };
 
   const signOut = async () => {
-    await logout(auth);
-    setAuth(null);
+    try {
+      await logout(auth);
+    } catch {
+      // Serverga ulanib bo'lmasa ham foydalanuvchi lokal tizimdan chiqadi.
+    } finally {
+      setAuth(null);
+    }
   };
 
   const value = useMemo(
