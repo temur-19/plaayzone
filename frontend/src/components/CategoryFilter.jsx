@@ -9,7 +9,8 @@ export default function CategoryFilter({ value, onChange, compact = false }) {
             value === category.value ? "border-slate-950 bg-slate-950 text-white shadow-sm" : "border-transparent bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-950"
           }`}
           key={category.value}
-          onClick={() => onChange(category.value)}
+          aria-pressed={value === category.value}
+          onClick={() => onChange(value === category.value ? null : category.value)}
           type="button"
         >
           {category.label === "All" ? "Hammasi" : category.label === "Mini Stadium" ? "Stadion" : category.label}

@@ -1,4 +1,4 @@
-import { LocateFixed, Navigation } from "lucide-react";
+import { LocateFixed, Navigation, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { API_BASE_URL } from "../api/api.js";
 import { loadYandexMaps } from "../utils/yandexMaps.js";
@@ -8,7 +8,7 @@ const ICON_BASE_URL = `${API_BASE_URL}/static/images/map-icons`;
 const MAX_ACCURACY_RADIUS = 220;
 const NEARBY_FIT_LIMIT = 12;
 
-export default function MapView({ apiKey, locations, userPosition, selectedLocation, onSelect, onDetails, onLocateMe, locationError, distances = {} }) {
+export default function MapView({ apiKey, locations, userPosition, selectedLocation, routeTarget, locateVersion, onClearRoute, onSelect, onDetails, onLocateMe, locationError, distances = {} }) {
   const mapNode = useRef(null);
   const mapRef = useRef(null);
   const locationCollectionRef = useRef(null);
@@ -16,6 +16,9 @@ export default function MapView({ apiKey, locations, userPosition, selectedLocat
   const markerLayoutsRef = useRef(null);
   const userMarkerRef = useRef(null);
   const accuracyCircleRef = useRef(null);
+  const routeRef = useRef(null);
+  const routeDestinationIdRef = useRef(null);
+  const processedLocateVersionRef = useRef(0);
   const fittedKeyRef = useRef("");
   const selectedMarkerIdRef = useRef(null);
   const [ready, setReady] = useState(false);
@@ -96,6 +99,55 @@ export default function MapView({ apiKey, locations, userPosition, selectedLocat
   }, [locations, onDetails, onSelect, ready]);
 
   useEffect(() => {
+    if (!ready || !mapRef.current) return undefined;
+
+    if (routeRef.current) {
+      mapRef.current.geoObjects.remove(routeRef.current);
+      routeRef.current = null;
+    }
+    if (!routeTarget || !userPosition || !window.ymaps.multiRouter) {
+      if (!routeTarget) routeDestinationIdRef.current = null;
+      return undefined;
+    }
+
+    const destination = [Number(routeTarget.lat), Number(routeTarget.lon)];
+    if (!Number.isFinite(destination[0]) || !Number.isFinite(destination[1])) return undefined;
+
+    const destinationId = String(routeTarget.id);
+    const isNewDestination = routeDestinationIdRef.current !== destinationId;
+    routeDestinationIdRef.current = destinationId;
+    const route = new window.ymaps.multiRouter.MultiRoute({
+      referencePoints: [[userPosition.lat, userPosition.lon], destination],
+      params: { routingMode: "auto", avoidTrafficJams: true },
+    }, {
+      // GPS yangilanganda viewport qayta-qayta sakramasin; faqat yangi manzilda moslashadi.
+      boundsAutoApply: isNewDestination,
+      wayPointVisible: false,
+      routeActiveStrokeColor: "#facc15",
+      routeActiveStrokeWidth: 6,
+      routeStrokeColor: "#94a3b8",
+      routeStrokeWidth: 3,
+    });
+    routeRef.current = route;
+    mapRef.current.geoObjects.add(route);
+
+    return () => {
+      if (mapRef.current && routeRef.current === route) {
+        mapRef.current.geoObjects.remove(route);
+        routeRef.current = null;
+      }
+    };
+  }, [ready, routeTarget, userPosition]);
+
+  // Bu tugma har doim aynan foydalanuvchining o'z GPS nuqtasiga qaytadi,
+  // marshrut faol bo'lsa ham.
+  useEffect(() => {
+    if (!ready || !mapRef.current || !userPosition || !locateVersion || processedLocateVersionRef.current === locateVersion) return;
+    processedLocateVersionRef.current = locateVersion;
+    mapRef.current.setCenter([userPosition.lat, userPosition.lon], 15, { duration: 450 });
+  }, [locateVersion, ready, userPosition]);
+
+  useEffect(() => {
     if (!ready || !mapRef.current || !markerLayoutsRef.current) return;
 
     if (userMarkerRef.current) mapRef.current.geoObjects.remove(userMarkerRef.current);
@@ -123,8 +175,8 @@ export default function MapView({ apiKey, locations, userPosition, selectedLocat
       zIndex: 900,
     });
     mapRef.current.geoObjects.add(userMarkerRef.current);
-    mapRef.current.setCenter(coords, 15, { duration: 450 });
-  }, [ready, userPosition]);
+    if (!routeTarget) mapRef.current.setCenter(coords, 15, { duration: 450 });
+  }, [ready, routeTarget, userPosition]);
 
   useEffect(() => {
     if (!ready || !mapRef.current) return;
@@ -175,7 +227,7 @@ export default function MapView({ apiKey, locations, userPosition, selectedLocat
     mapRef.current.setCenter(coords, 15, { duration: 350 });
   }, [locations, ready, selectedLocation]);
 
-  return <div className="absolute inset-0 bg-[#0f172a]"><div className="pz-dark-map absolute inset-0" ref={mapNode} /><div className="pointer-events-none absolute inset-0 z-[1] bg-[#0f2742]/14" />{(!ready || scriptError) && <div className="absolute inset-0 z-20 grid place-items-center bg-[#020617]/90 p-6 text-center"><div><Navigation className="mx-auto text-yellow-300" size={44} /><p className="mt-3 text-sm font-black text-slate-300">{scriptError || "Xarita yuklanmoqda..."}</p></div></div>}<button aria-label="Mening joylashuvimga o'tish" className="btn btn-primary absolute right-2 top-[4.75rem] z-10 h-11 w-11 px-0 sm:right-4 sm:top-24 sm:w-auto sm:px-4 lg:top-6" onClick={onLocateMe} type="button"><LocateFixed size={16} /><span className="hidden sm:inline">Mening joylashuvim</span></button>{locationError && <div className="absolute bottom-24 left-3 right-3 z-10 rounded-2xl border border-yellow-300/30 bg-[#020617]/90 px-4 py-3 text-sm font-bold text-yellow-100 backdrop-blur-xl sm:left-4 sm:right-4 lg:bottom-6 lg:right-auto">{locationError}</div>}</div>;
+  return <div className="absolute inset-0 bg-[#0f172a]"><div className="pz-dark-map absolute inset-0" ref={mapNode} /><div className="pointer-events-none absolute inset-0 z-[1] bg-[#0f2742]/14" />{(!ready || scriptError) && <div className="absolute inset-0 z-20 grid place-items-center bg-[#020617]/90 p-6 text-center"><div><Navigation className="mx-auto text-yellow-300" size={44} /><p className="mt-3 text-sm font-black text-slate-300">{scriptError || "Xarita yuklanmoqda..."}</p></div></div>}<button aria-label="Mening joylashuvimga o'tish" className="btn btn-primary absolute right-2 top-[4.75rem] z-10 h-11 w-11 px-0 sm:right-4 sm:top-24 sm:w-auto sm:px-4 lg:top-6" onClick={onLocateMe} type="button"><LocateFixed size={16} /><span className="hidden sm:inline">Mening joylashuvim</span></button>{routeTarget && <button className="btn btn-secondary absolute left-3 top-[4.75rem] z-10 px-3 sm:left-4 sm:top-24" onClick={onClearRoute} type="button"><X size={15} />Yo‘nalishni yopish</button>}{locationError && <div className="absolute bottom-24 left-3 right-3 z-10 rounded-2xl border border-yellow-300/30 bg-[#020617]/90 px-4 py-3 text-sm font-bold text-yellow-100 backdrop-blur-xl sm:left-4 sm:right-4 lg:bottom-6 lg:right-auto">{locationError}</div>}</div>;
 }
 
 function createMarkerLayouts() {
