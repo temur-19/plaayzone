@@ -3,8 +3,7 @@ import axios from "axios";
 const AUTH_KEY = "playzone.auth";
 let refreshPromise = null;
 
-const configuredApiUrl = import.meta.env.VITE_API_BASE_URL?.split("->", 1)[0].trim().replace(/\/+$/, "");
-export const API_BASE_URL = configuredApiUrl ?? "";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, "") ?? "";
 
 export function getStoredAuth() {
   try {
