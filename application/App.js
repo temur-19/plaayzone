@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import {
   getLocations,
+  createBookingRequest,
   loadApiUrl,
   login,
   normalizeApiUrl,
@@ -47,6 +48,10 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [loginError, setLoginError] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [bookingSubmitting, setBookingSubmitting] = useState(false);
+  const [bookingError, setBookingError] = useState("");
+  const [bookingStatus, setBookingStatus] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -127,6 +132,23 @@ export default function App() {
     }
   }
 
+  async function handleBookingSubmit(booking) {
+    setBookingError("");
+    setBookingStatus("");
+    setBookingSubmitting(true);
+    try {
+      await createBookingRequest({
+        location_id: selectedLocation.id,
+        ...booking,
+      });
+      setBookingStatus("So‘rovingiz yuborildi. Maskan egasining tasdig‘ini kuting.");
+    } catch (error) {
+      setBookingError(error.message);
+    } finally {
+      setBookingSubmitting(false);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
@@ -135,6 +157,7 @@ export default function App() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView
+          key={selectedLocation ? `location-${selectedLocation.id}` : "locations"}
           contentContainerStyle={styles.page}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
@@ -183,6 +206,22 @@ export default function App() {
             </View>
           </View>
 
+          {selectedLocation ? (
+            <LocationDetails
+              apiBaseUrl={apiBaseUrl}
+              bookingError={bookingError}
+              bookingStatus={bookingStatus}
+              isSubmitting={bookingSubmitting}
+              location={selectedLocation}
+              onBack={() => {
+                setSelectedLocation(null);
+                setBookingError("");
+                setBookingStatus("");
+              }}
+              onSubmit={handleBookingSubmit}
+            />
+          ) : (
+            <>
           <View style={styles.hero}>
             <Text style={styles.eyebrow}>PLAYZONE • O‘YIN VA DAM OLISH</Text>
             <Text style={styles.title}>O‘zingizga mos{"\n"}maskanni toping</Text>
@@ -345,19 +384,210 @@ export default function App() {
           ) : (
             <View style={styles.locationList}>
               {locations.map((location) => (
-                <LocationCard
-                  apiBaseUrl={apiBaseUrl}
+                <Pressable
+                  accessibilityLabel={`${location.name} tafsilotlari`}
+                  accessibilityRole="button"
                   key={location.id}
-                  location={location}
-                />
+                  onPress={() => {
+                    setSelectedLocation(location);
+                    setBookingError("");
+                    setBookingStatus("");
+                  }}
+                >
+                  <LocationCard apiBaseUrl={apiBaseUrl} location={location} />
+                </Pressable>
               ))}
             </View>
           )}
           <Text style={styles.footer}>PlayZone — hordiq uchun to‘g‘ri tanlov</Text>
+            </>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
+}
+
+function LocationDetails({
+  apiBaseUrl,
+  bookingError,
+  bookingStatus,
+  isSubmitting,
+  location,
+  onBack,
+  onSubmit,
+}) {
+  const initialTime = new Date();
+  initialTime.setHours(initialTime.getHours() + 1, 0, 0, 0);
+  const [customerName, setCustomerName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [requestedDate, setRequestedDate] = useState(
+    formatDateInput(initialTime),
+  );
+  const [requestedTime, setRequestedTime] = useState(
+    `${String(initialTime.getHours()).padStart(2, "0")}:00`,
+  );
+  const [durationHours, setDurationHours] = useState("1");
+  const [formError, setFormError] = useState("");
+  const imageUri = location.image
+    ? location.image.startsWith("http")
+      ? location.image
+      : `${apiBaseUrl}${location.image.startsWith("/") ? "" : "/"}${location.image}`
+    : null;
+
+  function submit() {
+    setFormError("");
+    const requestedAt = new Date(`${requestedDate}T${requestedTime}:00`);
+    const [year, month, day] = requestedDate.split("-").map(Number);
+    const duration = Number(durationHours);
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(requestedDate) ||
+      !/^\d{2}:\d{2}$/.test(requestedTime) ||
+      Number.isNaN(requestedAt.getTime()) ||
+      requestedAt.getFullYear() !== year ||
+      requestedAt.getMonth() + 1 !== month ||
+      requestedAt.getDate() !== day ||
+      requestedAt <= new Date()
+    ) {
+      setFormError("Kelajakdagi to‘g‘ri sana va vaqtni kiriting.");
+      return;
+    }
+    if (!Number.isInteger(duration) || duration < 1 || duration > 24) {
+      setFormError("Davomiylik 1 dan 24 soatgacha bo‘lishi kerak.");
+      return;
+    }
+
+    return onSubmit({
+      customer_name: customerName.trim(),
+      phone_number: phoneNumber,
+      requested_at: requestedAt.toISOString(),
+      duration_hours: duration,
+    });
+  }
+
+  return (
+    <View>
+      <Pressable accessibilityRole="button" onPress={onBack} style={styles.backButton}>
+        <Text style={styles.retryButtonText}>‹  Maskanlar ro‘yxatiga qaytish</Text>
+      </Pressable>
+      <View style={styles.detailCard}>
+        {imageUri ? (
+          <Image source={{ uri: imageUri }} style={styles.detailImage} />
+        ) : (
+          <View style={[styles.detailImage, styles.imagePlaceholder]}>
+            <Text style={styles.placeholderText}>PLAYZONE</Text>
+          </View>
+        )}
+        <Text style={styles.detailTitle}>{location.name}</Text>
+        <Text style={styles.locationCategory}>
+          {CATEGORIES.find((item) => item.value === location.category)?.label ??
+            location.category}
+        </Text>
+        <Text style={styles.locationPrice}>
+          {formatPrice(location.price)} so‘m
+        </Text>
+        {!!location.phone_number && (
+          <Text style={styles.locationPhone}>+998 {location.phone_number}</Text>
+        )}
+        <Text style={styles.detailDescription}>
+          {location.description || "Maskan haqida qo‘shimcha ma’lumot berilmagan."}
+        </Text>
+      </View>
+
+      <View style={styles.bookingCard}>
+        <Text style={styles.sectionTitle}>Bron so‘rovi</Text>
+        <Text style={styles.noticeText}>
+          Bron so‘rovi yuboriladi. Tasdiqlanmaguncha bron yakuniy hisoblanmaydi.
+        </Text>
+        {bookingStatus ? (
+          <View style={styles.successCard}>
+            <Text style={styles.successText}>{bookingStatus}</Text>
+          </View>
+        ) : (
+          <>
+            <TextInput
+              autoCapitalize="words"
+              onChangeText={setCustomerName}
+              placeholder="Ism va familiya"
+              placeholderTextColor={COLORS.muted}
+              style={styles.input}
+              value={customerName}
+            />
+            <View style={styles.phoneInputRow}>
+              <Text style={styles.phonePrefix}>+998</Text>
+              <TextInput
+                keyboardType="phone-pad"
+                maxLength={9}
+                onChangeText={(value) =>
+                  setPhoneNumber(value.replace(/\D/g, "").slice(0, 9))
+                }
+                placeholder="90 123 45 67"
+                placeholderTextColor={COLORS.muted}
+                style={[styles.input, styles.phoneInput]}
+                value={phoneNumber}
+              />
+            </View>
+            <TextInput
+              onChangeText={setRequestedDate}
+              placeholder="Sana (YYYY-MM-DD)"
+              placeholderTextColor={COLORS.muted}
+              style={styles.input}
+              value={requestedDate}
+            />
+            <TextInput
+              onChangeText={setRequestedTime}
+              placeholder="Vaqt (HH:MM)"
+              placeholderTextColor={COLORS.muted}
+              style={styles.input}
+              value={requestedTime}
+            />
+            <TextInput
+              keyboardType="number-pad"
+              onChangeText={setDurationHours}
+              placeholder="Davomiyligi (soat)"
+              placeholderTextColor={COLORS.muted}
+              style={styles.input}
+              value={durationHours}
+            />
+            {!!formError && <Text style={styles.errorText}>{formError}</Text>}
+            {!!bookingError && (
+              <Text style={styles.errorText}>{bookingError}</Text>
+            )}
+            <Pressable
+              accessibilityRole="button"
+              disabled={
+                isSubmitting ||
+                !customerName.trim() ||
+                phoneNumber.length !== 9 ||
+                !requestedDate ||
+                !requestedTime
+              }
+              onPress={submit}
+              style={[
+                styles.primaryButton,
+                (isSubmitting ||
+                  !customerName.trim() ||
+                  phoneNumber.length !== 9 ||
+                  !requestedDate ||
+                  !requestedTime) &&
+                  styles.disabledButton,
+              ]}
+            >
+              {isSubmitting ? (
+                <ActivityIndicator color={COLORS.white} />
+              ) : (
+                <Text style={styles.primaryButtonText}>So‘rov yuborish</Text>
+              )}
+            </Pressable>
+          </>
+        )}
+      </View>
+    </View>
+  );
+}
+
+function formatDateInput(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
 function LocationCard({ apiBaseUrl, location }) {
@@ -540,5 +770,51 @@ const styles = StyleSheet.create({
   noticeText: { color: COLORS.muted, fontSize: 13, lineHeight: 20, marginTop: 7 },
   retryButton: { alignSelf: "flex-start", marginTop: 12, paddingVertical: 6 },
   retryButtonText: { color: COLORS.green, fontSize: 14, fontWeight: "700" },
+  backButton: { alignSelf: "flex-start", marginBottom: 14, paddingVertical: 4 },
+  detailCard: {
+    backgroundColor: COLORS.white,
+    borderColor: COLORS.border,
+    borderRadius: 18,
+    borderWidth: 1,
+    gap: 8,
+    marginBottom: 16,
+    padding: 16,
+  },
+  detailImage: {
+    alignSelf: "center",
+    borderRadius: 14,
+    height: 190,
+    marginBottom: 8,
+    width: "100%",
+  },
+  detailTitle: { color: COLORS.ink, fontSize: 22, fontWeight: "800" },
+  detailDescription: {
+    color: COLORS.muted,
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: 6,
+  },
+  bookingCard: {
+    backgroundColor: COLORS.white,
+    borderColor: COLORS.border,
+    borderRadius: 18,
+    borderWidth: 1,
+    gap: 12,
+    padding: 18,
+  },
+  phoneInputRow: { alignItems: "center", flexDirection: "row", gap: 8 },
+  phonePrefix: {
+    color: COLORS.ink,
+    fontSize: 15,
+    fontWeight: "700",
+    paddingHorizontal: 8,
+  },
+  phoneInput: { flex: 1 },
+  successCard: {
+    backgroundColor: COLORS.greenLight,
+    borderRadius: 12,
+    padding: 14,
+  },
+  successText: { color: COLORS.greenDark, fontSize: 14, lineHeight: 20 },
   footer: { color: COLORS.muted, fontSize: 12, paddingTop: 25, textAlign: "center" },
 });

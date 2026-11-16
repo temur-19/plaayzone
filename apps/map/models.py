@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from config.settings import AUTH_USER_MODEL
+from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 class Location(models.Model):
     CATEGORY_CHOICES = [
@@ -22,3 +23,31 @@ class Location(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class BookingRequest(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Kutilmoqda"
+        CONFIRMED = "confirmed", "Tasdiqlandi"
+        REJECTED = "rejected", "Rad etildi"
+
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.CASCADE,
+        related_name="booking_requests",
+    )
+    customer_name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=9)
+    requested_at = models.DateTimeField()
+    duration_hours = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(24)]
+    )
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.location.name} — {self.customer_name}"

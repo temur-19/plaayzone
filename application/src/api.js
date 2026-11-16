@@ -96,6 +96,13 @@ export function getLocations(category = "") {
   });
 }
 
+export function createBookingRequest(booking) {
+  return request("/head/api/bookings/", {
+    method: "POST",
+    body: JSON.stringify(booking),
+  });
+}
+
 export function login(username, password) {
   return request("/login/", {
     method: "POST",
