@@ -8,7 +8,7 @@ class Location(models.Model):
         ('stadium', 'Mini-stadion'),
         ('playstation', 'Playstation'),
         ('pc_club', 'Kompyuter klub'),
-        ('billiard', 'Billiard'),
+        ('billiard', 'Billiard')
     ]
     owner = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.SET_DEFAULT,default = None, null=True, blank=True, related_name='locations')
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='stadium')
